@@ -3,6 +3,7 @@
 ## Environment
 
 sbt 0.7.7
+
 scala 2.9.0-1
 
 
@@ -25,5 +26,8 @@ com.pokutuna.Lifelog.db - DBを操作しちゃう系
 (たぶん他のでも動く)
 
 
+サンプルコード
+
+https://github.com/pokutuna/lifelog-library/tree/master/sample
 
 
