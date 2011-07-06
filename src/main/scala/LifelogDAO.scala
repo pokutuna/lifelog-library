@@ -1,4 +1,4 @@
-package com.pokutuna.LifelogDBC.dao
+package com.pokutuna.Lifelog.db.dao
 
 import org.scalaquery.session._
 import org.scalaquery.ql._
@@ -7,8 +7,8 @@ import org.scalaquery.ql.extended.{ExtendedTable => Table}
 import org.scalaquery.ql.TypeMapper._
 import org.scalaquery.ql.basic.BasicDriver.Implicit._
 import org.scalaquery.session.Database._
-import com.pokutuna.LifelogDBC.table.LifelogTable._
-import com.pokutuna.LifelogDBC.model.LifelogModel._
+import com.pokutuna.Lifelog.db.table.LifelogTable._
+import com.pokutuna.Lifelog.db.model.LifelogModel._
 
 class LifelogDAO(path: String) extends DatabaseAccessObject(path, SQLiteDriver) {
 

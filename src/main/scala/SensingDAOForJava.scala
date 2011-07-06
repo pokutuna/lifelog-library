@@ -1,7 +1,7 @@
-package com.pokutuna.LifelogDBC.dao
+package com.pokutuna.Lifelog.db.dao
 
 import scala.collection.JavaConverters._
-import com.pokutuna.LifelogDBC.model.SensingModel._
+import com.pokutuna.Lifelog.db.model.SensingModel._
 
 class SensingDAOForJava(path: String) {
   val dao = new SensingDAO(path)
