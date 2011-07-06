@@ -25,9 +25,11 @@ class LifelogDAO(path: String) extends DatabaseAccessObject(path, SQLiteDriver) 
   }
 
   def photoTakenWhere(latMin: Double, latMax: Double, lonMin: Double, lonMax: Double): Seq[PhotoRecord] = {
-    Photos.where{ p =>
-      p.latitude >= latMin && p.latitude <= latMax &&
-      p.longitude >= lonMin && p.longitude <= lonMax }.list
+    db.withSession {
+      Photos.where{ p =>
+        p.latitude >= latMin && p.latitude <= latMax &&
+        p.longitude >= lonMin && p.longitude <= lonMax }.list
+    }
   }
 
   def existsFile(dirname: String, filename: String): Boolean = {
@@ -54,6 +56,8 @@ class LifelogDAO(path: String) extends DatabaseAccessObject(path, SQLiteDriver) 
   }
 
   def insertPhotoRecord(photo: PhotoRecord): Unit = {
-    Photos.forInsert.insert(photo)
+    db.withSession {
+      Photos.forInsert.insert(photo)
+    }
   }
 }

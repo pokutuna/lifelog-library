@@ -2,7 +2,7 @@
 
 (
 
-:project-package "com.pokutuna.LifelogDBC"
+:project-package "com.pokutuna.Lifelog"
 
 :use-sbt t
 

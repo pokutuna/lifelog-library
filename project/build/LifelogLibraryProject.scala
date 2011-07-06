@@ -1,6 +1,6 @@
 import sbt._
 
-class LifelogDBCProject(info: ProjectInfo) extends DefaultProject(info) {
+class LifelogLibraryProject(info: ProjectInfo) extends DefaultProject(info) {
   override def compileOptions = super.compileOptions ++
   compileOptions("-encoding", "utf8")
 
