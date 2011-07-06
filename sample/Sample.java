@@ -3,7 +3,7 @@ import com.pokutuna.Lifelog.db.dao.*;
 import com.pokutuna.Lifelog.db.model.SensingModel.*;
 import com.pokutuna.Lifelog.db.model.LifelogModel.*;
 
-public class SampleSample {
+public class Sample {
 
   public static void main(String[] args) {
     
