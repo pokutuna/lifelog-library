@@ -1,23 +1,21 @@
 # lifelog-library
 
-後輩のための研究で使うライブラリ
-
-
-# Environment
+## Environment
 
 sbt 0.7.7
-
 scala 2.9.0-1
 
 
-# Packages
+## Packages
 
 com.pokutuna.Lifelog.db - DBを操作しちゃう系
 
 
-# Javaのひとむけ
+## Javaのひとむけ
 
-以下のjarもEclipseのビルドパスに追加して動かしてください
+以下のjarをEclipseのビルドパスに追加して動かしてください
+
+[lifelog-library](https://github.com/pokutuna/lifelog-library/downloads/) から最新版
 
 [scala-library-2.9.0-1](http://scala-tools.org/repo-releases/org/scala-lang/scala-library/2.9.0-1/scala-library-2.9.0-1.jar)
 
