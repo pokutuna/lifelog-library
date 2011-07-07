@@ -6,4 +6,5 @@ class LifelogLibraryProject(info: ProjectInfo) extends DefaultProject(info) {
 
   val scalaTest = "org.scalatest" % "scalatest_2.9.0" % "1.6.1"
   val scalaQuery = "org.scalaquery" % "scalaquery_2.9.0" % "0.9.4"
+  val sqliteJDBC = "org.sqlite" % "sqlitejdbc" % "v056" from "http://files.zentus.com/sqlitejdbc/sqlitejdbc-v056.jar"
 }
