@@ -22,5 +22,4 @@ class LifelogDAOForJava(path: String) {
   def existsFile(filename: String): Boolean = dao.existsFile(filename)
 
   def insertPhotoRecord(photo: PhotoRecord):Unit = dao.insertPhotoRecord(photo)
-
 }
