@@ -35,8 +35,7 @@ class LifelogDAO(path: String) extends DatabaseAccessObject(path, SQLiteDriver) 
   def existsFile(dirname: String, filename: String): Boolean = {
     db.withSession {
       Photos.where { p =>
-        p.directory is dirname
-        p.filename is filename
+        (p.directory is dirname) && (p.filename is filename)
       }.firstOption match {
         case Some(_) => true
         case None => false
