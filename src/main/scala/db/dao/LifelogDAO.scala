@@ -32,6 +32,18 @@ class LifelogDAO(path: String) extends DatabaseAccessObject(path, SQLiteDriver) 
     }
   }
 
+  def photoByName(filename: String): Seq[PhotoRecord] = {
+    db.withSession {
+      Photos.where(_.filename is filename).list
+    }
+  }
+
+  def photoByName(dirname:String, filename: String): Seq[PhotoRecord] = {
+    db.withSession {
+      Photos.where(p => (p.directory is dirname) && (p.filename is filename)).list
+    }
+  }
+
   def existsFile(dirname: String, filename: String): Boolean = {
     db.withSession {
       Photos.where { p =>

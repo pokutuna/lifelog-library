@@ -12,6 +12,12 @@ class LifelogDAOForJava(path: String) {
   def photoTakenWhere(latMin: Double, latMax: Double, lonMin: Double, lonMax: Double): java.util.List[PhotoRecord] =
     dao.photoTakenWhere(latMin, latMax, lonMin, lonMax).asJava
 
+  def photoByName(filename: String): java.util.List[PhotoRecord] =
+    dao.photoByName(filename).asJava
+
+  def photoByName(dirname: String, filename: String): java.util.List[PhotoRecord] =
+    dao.photoByName(dirname, filename).asJava
+
   def existsFile(dirname: String, filename: String): Boolean = dao.existsFile(dirname, filename)
   def existsFile(filename: String): Boolean = dao.existsFile(filename)
 

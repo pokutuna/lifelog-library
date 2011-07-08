@@ -53,6 +53,16 @@ class LifelogDAOSpec extends SpecHelper {
     }
   }
 
+  describe("Photo Taken By Name") {
+    it("should get PhotoRecord") {
+      val records1 = db.photoByName("fn3").toSet
+      records1 should be (Set(photo3, photo4))
+
+      val records2 = db.photoByName("dir3", "fn3").toSet
+      records2 should be (Set(photo3))
+    }
+  }
+
   describe("Other") {
     it("should check file existence") {
       db.existsFile("dir1", "fn1") should be (true)
@@ -72,4 +82,5 @@ class LifelogDAOSpec extends SpecHelper {
       db.photoTakenIn("hogedate", "hogedate").toList should be (List(photo, photo))
     }
   }
+
 }
