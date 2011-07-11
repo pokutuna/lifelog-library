@@ -1,4 +1,4 @@
-package com.pokutuna.Lifelog.test
+package com.pokutuna.lifelog.test
 
 import org.scalatest.Spec
 import org.scalatest.matchers.ShouldMatchers

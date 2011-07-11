@@ -1,4 +1,4 @@
-package com.pokutuna.Lifelog.db.dao
+package com.pokutuna.lifelog.db.dao
 
 import org.scalaquery.ql.basic.AbstractBasicTable
 import org.scalaquery.ql.basic.BasicProfile

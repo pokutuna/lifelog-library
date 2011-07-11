@@ -1,7 +1,7 @@
-package com.pokutuna.Lifelog.test
+package com.pokutuna.lifelog.test
 
-import com.pokutuna.Lifelog.db.dao._
-import com.pokutuna.Lifelog.db.model.LifelogModel._
+import com.pokutuna.lifelog.db.dao._
+import com.pokutuna.lifelog.db.model.LifelogModel._
 
 class LifelogDAOSpec extends SpecHelper {
 

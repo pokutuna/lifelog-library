@@ -1,7 +1,7 @@
-package com.pokutuna.Lifelog.db.dao
+package com.pokutuna.lifelog.db.dao
 
 import scala.collection.JavaConverters._
-import com.pokutuna.Lifelog.db.model.LifelogModel._
+import com.pokutuna.lifelog.db.model.LifelogModel._
 
 class LifelogDAOForJava(path: String) {
   val dao = new LifelogDAO(path)

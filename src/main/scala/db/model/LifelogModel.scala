@@ -1,4 +1,4 @@
-package com.pokutuna.Lifelog.db.model
+package com.pokutuna.lifelog.db.model
 
 object LifelogModel {
   case class PhotoRecord(

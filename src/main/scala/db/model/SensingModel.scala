@@ -1,4 +1,4 @@
-package com.pokutuna.Lifelog.db.model
+package com.pokutuna.lifelog.db.model
 
 object SensingModel {
 
