@@ -1,12 +1,9 @@
 package com.pokutuna.lifelog.db.dao
 
-import org.scalaquery.ql.basic.AbstractBasicTable
-import org.scalaquery.ql.basic.BasicProfile
-import org.scalaquery.ql.basic.BasicTable
-import org.scalaquery.ql.extended.ExtendedProfile
-import org.scalaquery.ql.extended.ExtendedTable
-import org.scalaquery.session._
 import org.scalaquery.ql._
+import org.scalaquery.ql.basic.{AbstractBasicTable, BasicProfile, BasicTable}
+import org.scalaquery.ql.extended.{ExtendedProfile, ExtendedTable}
+import org.scalaquery.session._
 
 abstract class DatabaseAccessObject(path:String, driver:ExtendedProfile) {
   import driver.Implicit._

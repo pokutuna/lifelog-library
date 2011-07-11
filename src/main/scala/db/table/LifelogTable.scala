@@ -1,13 +1,11 @@
 package com.pokutuna.lifelog.db.table
 
-import org.scalaquery.session._
+import com.pokutuna.lifelog.db.model.LifelogModel._
 import org.scalaquery.ql._
-import org.scalaquery.ql.extended._
-import org.scalaquery.ql.extended.{ExtendedTable => Table}
 import org.scalaquery.ql.TypeMapper._
 import org.scalaquery.ql.basic.BasicDriver.Implicit._
+import org.scalaquery.ql.extended.{ExtendedTable => Table, _}
 import org.scalaquery.session.Database._
-import com.pokutuna.lifelog.db.model.LifelogModel._
 
 object LifelogTable {
   object Photos extends Table[PhotoRecord]("photo"){
