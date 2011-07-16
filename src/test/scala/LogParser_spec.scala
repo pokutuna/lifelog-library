@@ -2,7 +2,7 @@ package com.pokutuna.lifelog.test
 
 import com.pokutuna.lifelog.parsing._
 import com.pokutuna.lifelog.parsing.LogParser._
-import com.pokutuna.lifelog.parsing.LogTokens._
+import com.pokutuna.lifelog.parsing.LogToken._
 import com.pokutuna.lifelog.util.TimeUtil
 import java.util.Calendar
 import java.util.Date

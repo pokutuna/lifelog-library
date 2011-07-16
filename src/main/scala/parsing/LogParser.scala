@@ -4,7 +4,7 @@ import java.util.Date
 import java.util.Calendar
 import scala.util.parsing.combinator._
 import scala.util.parsing.input.Reader
-import com.pokutuna.lifelog.parsing.LogTokens._
+import com.pokutuna.lifelog.parsing.LogToken._
 
 object LogParser extends RegexParsers {
 

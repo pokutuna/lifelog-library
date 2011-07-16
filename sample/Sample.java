@@ -6,7 +6,7 @@ import com.pokutuna.Lifelog.db.model.LifelogModel.*;
 public class Sample {
 
   public static void main(String[] args) {
-    
+
     //DAO(データベースアクセスオブジェクト)の作成
     //jdbc:sqlite:[path] で指定する
     //ここではsensing.dbを操作するSensingDAOForJavaをインスタンス化
