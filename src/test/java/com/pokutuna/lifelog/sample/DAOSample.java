@@ -1,9 +1,9 @@
 package com.pokutuna.lifelog.sample;
 
-import java.util.List;
 import com.pokutuna.lifelog.db.dao.*;
 import com.pokutuna.lifelog.db.model.SensingModel.*;
 import com.pokutuna.lifelog.db.model.LifelogModel.*;
+import java.util.List;
 
 public class DAOSample {
 
@@ -15,9 +15,12 @@ public class DAOSample {
     SensingDAOForJava sdao = new SensingDAOForJava("jdbc:sqlite:sensing.db");
 
     //SensingDAOが返すデータベースのカラムに対応するオブジェクトは
-    //com.pokutuna.Lifelog.db.model.SensingModel以下にある。
-    //DetectedRecord(検出したデバイスアドレスと時刻を持つ)インタフェースを実装するBtDetected, WifiDetected
+    //com.pokutuna.Lifelog.db.model.SensingModel以下の、
+    //DetectedRecord(検出したデバイスアドレスと時刻を持つ)インタフェースを実装するBtDetected, WifiDetected、
     //DeviceRecord(検出したデバイスごとのアドレスと名前の対応を持つ)インタフェースを実装するBtDevice, WifiDeviceがある
+
+    //DeviceRecordはaddress(), name()を持ち、それぞれデバイスアドレスとデバイス名を返す
+    //DetectedRecordはaddress(), dateTime()を持ち、デバイスアドレスと検出時刻を返す
 
     //detectedInで指定された期間内に検出したBt,Wifiのレコードを返す
     List<DetectedRecord> detected = sdao.detectedIn("2011-06-01 12:00:00", "2011-06-01 15:00:00");
