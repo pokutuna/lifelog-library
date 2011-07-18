@@ -2,6 +2,7 @@ package com.pokutuna.lifelog.parsing
 
 import com.pokutuna.lifelog.parsing.LogToken._
 import java.util.{Calendar, Date}
+import scala.collection.JavaConverters._
 import scala.util.parsing.combinator._
 import scala.util.parsing.combinator.token.Tokens
 import scala.util.parsing.combinator.PackratParsers
@@ -13,6 +14,8 @@ object LogParser extends RegexParsers {
   def run(in: CharSequence) = parseAll(log, in)
   def run(in: java.io.Reader) = parseAll(log, in)
   def run(in: Reader[Char]) = parseAll(log, in)
+
+  def runForJava(in: java.io.Reader): java.util.List[LogLine] = run(in).get.asJava
 
   override def skipWhitespace = false
 
