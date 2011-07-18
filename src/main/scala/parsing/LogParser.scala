@@ -1,10 +1,12 @@
 package com.pokutuna.lifelog.parsing
 
-import java.util.Date
-import java.util.Calendar
-import scala.util.parsing.combinator._
-import scala.util.parsing.input.Reader
 import com.pokutuna.lifelog.parsing.LogToken._
+import java.util.{Calendar, Date}
+import scala.util.parsing.combinator._
+import scala.util.parsing.combinator.token.Tokens
+import scala.util.parsing.combinator.PackratParsers
+import scala.util.parsing.input.CharArrayReader.EofCh
+import scala.util.parsing.input.Reader
 
 object LogParser extends RegexParsers {
 
@@ -14,25 +16,25 @@ object LogParser extends RegexParsers {
 
   override def skipWhitespace = false
 
-  def EOL: Parser[String] = "\n"
-  def tab: Parser[String] = "\t"
+  lazy val LF = elem('\n')
+  lazy val Tab = elem('\t')
 
-  def log: Parser[List[LogLine]] = rep(logLine)
+  lazy val log: Parser[List[LogLine]] = repsep(logLine, LF)
 
-  def logLine: Parser[LogLine] = (detectLog | annotationLog | otherLog) <~ EOL
+  lazy val logLine: Parser[LogLine] = detectLog | annotationLog | otherLog
 
-  def detectLog: Parser[DetectLog] = wifiDetect | btDetect
+  lazy val detectLog: Parser[DetectLog] = wifiDetect | btDetect
 
-  def btDetect: Parser[BtDetectLog] = dateTime ~ tab ~ deviceName ~ tab ~ address ^^ {
+  lazy val btDetect: Parser[BtDetectLog] = dateTime ~ Tab ~ deviceName ~ Tab ~ address <~ ".*".r ^? {
     case time ~ _ ~ name ~ _ ~ addr => BtDetectLog(time, name, addr)
   }
 
-  def wifiDetect: Parser[WifiDetectLog] = dateTime ~ tab ~ deviceName ~ tab ~ address ~ tab  ~ signal ^^ {
+  lazy val wifiDetect: Parser[WifiDetectLog] = dateTime ~ Tab ~ deviceName ~ Tab ~ address ~ Tab  ~ signal  <~ ".*".r ^? {
     case time ~ _ ~ name ~ _ ~ addr ~ _ ~ sig => WifiDetectLog(time, name, addr, sig)
   }
 
   //Time
-  def dateTime: Parser[Date] = date ~ """\s""".r ~ time ^^ {
+  lazy val dateTime: Parser[Date] = date ~ """\s""".r ~ time ^^ {
     case d ~ _ ~ t =>
       val c = Calendar.getInstance
       c.clear()
@@ -40,92 +42,97 @@ object LogParser extends RegexParsers {
       c.getTime
   }
 
-  def doubleDigits = """[0-9]{1,2}""".r
+  lazy val doubleDigits = """[0-9]{1,2}""".r
 
-  def timeSep = ":"
-  def time: Parser[(Int,Int,Int)] = hours ~ timeSep ~ minutes ~ timeSep ~ seconds ^^ {
+  lazy val timeSep = ":"
+  lazy val time: Parser[(Int,Int,Int)] = hours ~ timeSep ~ minutes ~ timeSep ~ seconds ^^ {
     case h ~ _ ~ m ~ _ ~ s => (h, m, s)
   }
-  def hours: Parser[Int] = doubleDigits ^? {
+  lazy val hours: Parser[Int] = doubleDigits ^? {
     case h if 0 <= h.toInt && h.toInt <= 23 => h.toInt
   }
 
-  def minutes: Parser[Int] = doubleDigits ^? {
+  lazy val minutes: Parser[Int] = doubleDigits ^? {
     case m if 0 <= m.toInt && m.toInt <= 59 => m.toInt
   }
 
-  def seconds: Parser[Int] = minutes
+  lazy val seconds: Parser[Int] = minutes
 
-  def dateSep = "-" | "/"
-  def date: Parser[(Int,Int,Int)] = year ~ dateSep ~ month ~ dateSep ~ day ^^ {
+  lazy val dateSep = "-" | "/"
+  lazy val date: Parser[(Int,Int,Int)] = year ~ dateSep ~ month ~ dateSep ~ day ^^ {
     case y ~ _ ~ m ~ _ ~ d => (y, m, d)
   }
 
-  def year: Parser[Int] = positiveDigit ~ rep(digit) ^? {
+  lazy val year: Parser[Int] = positiveDigit ~ rep(digit) ^? {
     case h ~ rest if (h + rest.mkString).toInt >= 1900  => (h + rest.mkString).toInt
   }
 
-  def month: Parser[Int] = doubleDigits ^? {
+  lazy val month: Parser[Int] = doubleDigits ^? {
     case m if 0 < m.toInt && m.toInt <= 12 => m.toInt
   }
 
-  def day: Parser[Int] = doubleDigits ^? {
+  lazy val day: Parser[Int] = doubleDigits ^? {
     case d if 0< d.toInt && d.toInt <= 31 => d.toInt
   }
 
-  def positiveDigit: Parser[String] = """[1-9]""".r
-  def digit: Parser[String] = positiveDigit | "0".r
+  val positiveDigit: Parser[String] = """[1-9]""".r
+  lazy val digit: Parser[String] = positiveDigit | "0".r
 
   //device name
-  def deviceName: Parser[String] = """[^\f\n\r\t]*""".r
+  val deviceName: Parser[String] = """[^\f\n\r\t]*""".r
 
   //address
-  def address: Parser[String] = repN(5, hexPairWithColon) ~ hexPair ^^ {
+  lazy val address: Parser[String] = repN(5, hexPairWithColon) ~ hexPair ^? {
     case list ~ p => (list.mkString + p).toUpperCase
   }
 
-  def hexPairWithColon: Parser[String] = hexPair ~ ":" ^^ {
+  lazy val hexPairWithColon: Parser[String] = hexPair ~ ":" ^^ {
     case pair ~ colon => pair + colon
   }
 
-  def hexPair: Parser[String] = hexadecimal ~ hexadecimal ^^ {
+  lazy val hexPair: Parser[String] = hexadecimal ~ hexadecimal ^^ {
     case first ~ second => first + second
   }
 
-  def hexadecimal: Parser[String] = """[0-9a-fA-F]""".r
+  val hexadecimal: Parser[String] = """[0-9a-fA-F]""".r
 
   //signal
-  def signal: Parser[Int] = "-".r.? ~ rep(digit) ^^ {
+  lazy val signal: Parser[Int] = "-".r.? ~ rep(digit) ^^ {
     case s ~ list => (s.getOrElse("") + list.mkString).toInt
   }
 
   //annotation
-  def annotationLog: Parser[Annotation] = versionAnno | loggerBdaAnno | btScanAnno | wifiScanAnno
+  lazy val annotationLog: Parser[Annotation] = versionAnno | loggerBdaAnno | btScanAnno | wifiScanAnno
 
   val versionTag = "LOGGER_VERSION"
-  def version = deviceName
-  def versionAnno: Parser[LoggerVersion] = "[" ~> versionTag ~> "]" ~> version ^^ {
+  lazy val version = deviceName
+  lazy val versionAnno: Parser[LoggerVersion] = "[" ~> versionTag ~> "]" ~> version ^^ {
     case v => LoggerVersion(v)
   }
 
-  def loggerBdaTag = "LOGGER_BDA"
-  def loggerBdaAnno: Parser[LoggerBDA] = "[" ~> loggerBdaTag ~> "]" ~> address ^^ {
+  lazy val loggerBdaTag = "LOGGER_BDA"
+  lazy val loggerBdaAnno: Parser[LoggerBDA] = "[" ~> loggerBdaTag ~> "]" ~> address ^^ {
     case a => LoggerBDA(a)
   }
 
-  def btScanTag = "BT_SCAN"
-  def btScanAnno: Parser[BtScan] = "[" ~> btScanTag ~> "]" ~> dateTime ^^ {
+  lazy val btScanTag = "BT_SCAN"
+  lazy val btScanAnno: Parser[BtScan] = "[" ~> btScanTag ~> "]" ~> dateTime ^^ {
     case t => BtScan(t)
   }
 
-  def wifiScanTag = "WIFI_SCAN"
-  def wifiScanAnno: Parser[WifiScan] = "[" ~> wifiScanTag ~> "]" ~> dateTime ^^ {
+  lazy val wifiScanTag = "WIFI_SCAN"
+  lazy val wifiScanAnno: Parser[WifiScan] = "[" ~> wifiScanTag ~> "]" ~> dateTime ^^ {
     case t => WifiScan(t)
   }
 
   //other
-  def otherLog: Parser[OtherLog] = """.*""".r ^^ {
-    case blank if blank == "" => BlankLine()
-    case e => ErrorLog(e)
+  lazy val blankLine = """.*""".r ^? {
+    case l if l == "" => BlankLine()
   }
+
+  lazy val errorLog = """.*""".r ^? {
+    case l => ErrorLog(l)
+  }
+
+  lazy val otherLog: Parser[OtherLog] = blankLine | errorLog
 }

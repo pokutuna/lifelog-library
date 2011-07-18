@@ -4,7 +4,7 @@ import com.pokutuna.lifelog.parsing._
 import com.pokutuna.lifelog.parsing.LogParser._
 import com.pokutuna.lifelog.parsing.LogToken._
 import com.pokutuna.lifelog.util.TimeUtil
-import java.util.Calendar
+import java.io.FileReader
 import java.util.Date
 
 class LogParserSpec extends SpecHelper {
@@ -159,23 +159,31 @@ class LogParserSpec extends SpecHelper {
     }
   }
 
-  describe("Root Parser") {
+  describe("LogLine Parser") {
     it("should parse each element correctly") {
-      parseAll(logLine, "[LOGGER_BDA]70:71:bc:21:11:1e\n").get should be (LoggerBDA("70:71:BC:21:11:1E"))
-      parseAll(logLine, "[LOGGER_VERSION]1.0\n").get should be (LoggerVersion("1.0"))
-      parseAll(logLine, "[BT_SCAN]2011/06/06 06:50:48\n").get should be (BtScan(TimeUtil.parse("2011-06-06 06:50:48")))
-      parseAll(logLine, "[WIFI_SCAN]2011/06/06 06:50:28\n").get should be (WifiScan(TimeUtil.parse("2011-06-06 06:50:28")))
+      parseAll(logLine, "[LOGGER_BDA]70:71:bc:21:11:1e").get should be (LoggerBDA("70:71:BC:21:11:1E"))
+      parseAll(logLine, "[LOGGER_VERSION]1.0").get should be (LoggerVersion("1.0"))
+      parseAll(logLine, "[BT_SCAN]2011/06/06 06:50:48").get should be (BtScan(TimeUtil.parse("2011-06-06 06:50:48")))
+      parseAll(logLine, "[WIFI_SCAN]2011/06/06 06:50:28").get should be (WifiScan(TimeUtil.parse("2011-06-06 06:50:28")))
 
-      val a = parseAll(logLine, "2011/06/06 06:49:46	pokutuna-MBA	58:55:CA:FB:56:D2\n").get
+      val a = parseAll(logLine, "2011/06/06 06:49:46	pokutuna-MBA	58:55:CA:FB:56:D2").get
       val b = BtDetectLog(TimeUtil.parse("2011-06-06 06:49:46"), "pokutuna-MBA", "58:55:CA:FB:56:D2")
       a should be (b)
 
-      val c = parseAll(logLine, "2011/06/06 06:49:44	TUNACAN	00:18:84:89:A9:74	-37\n").get
+      val c = parseAll(logLine, "2011/06/06 06:49:44	TUNACAN	00:18:84:89:A9:74	-37").get
       val d = WifiDetectLog(TimeUtil.parse("2011-06-06 06:49:44"), "TUNACAN", "00:18:84:89:A9:74", -37)
       c should be (d)
 
-      parseAll(logLine, "\n").get should be (BlankLine())
-      parseAll(logLine, "fugafuga\n").get should be (ErrorLog("fugafuga"))
+      parseAll(logLine, "").get should be (BlankLine())
+      parseAll(logLine, "fugafuga").get should be (ErrorLog("fugafuga"))
+      parseAll(logLine, "2010/10/10 00:06:19     Kono_Pocket_PC  00:22:64:CD:9E:94fuga").get should be (ErrorLog("2010/10/10 00:06:19     Kono_Pocket_PC  00:22:64:CD:9E:94fuga"))
+    }
+  }
+
+  describe("Read File") {
+    it("should read dirty logfile") {
+      val btlog = new FileReader("src/test/resources/test_btlogdata.tsv")
+      LogParser.run(btlog).successful should be === true
     }
   }
 }
