@@ -23,6 +23,7 @@ object ExifExtractor {
 }
 
 class Exif(metadata:Metadata) {
+
   lazy val date:Option[Date] = try {
     val d = metadata.getDirectory(classOf[ExifSubIFDDirectory]).getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL)
     Some(d)
@@ -41,5 +42,10 @@ class Exif(metadata:Metadata) {
   } catch {
     case _ => None
   }
+
+  def dateOrNull: Date = date.getOrElse(null)
+  def latitudeOrNaN: Double = latitude.getOrElse(Double.NaN)
+  def longitudeOrNaN: Double = longitude.getOrElse(Double.NaN)
+
 }
 
