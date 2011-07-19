@@ -15,7 +15,7 @@ scala 2.9.0-1
         * SensingModel - sensing.db内のデバイスとデバイス検出に対応するモデル
     * table - ORMapperが利用するテーブル
         * 略
-    * dao - DatabaseAccessObject(*)
+    * dao - DatabaseAccessObject[(sample)](https://github.com/pokutuna/lifelog-library/blob/master/src/test/java/com/pokutuna/lifelog/sample/DAOSample.java)
         * LifelogDAO - lifelog.dbに簡単にアクセス
         * LifelogDAOForJava - java向け、返り値をSeq[T] -> java.util.List<T> にした
         * SensingDAO - sensing.dbに簡単にアクセス
@@ -23,12 +23,12 @@ scala 2.9.0-1
     * util - DBに関するユーティリティ
         * PhotoRecordFactory - java.io.FileからPhotoRecordを生成する
 * com.pokutuna.lifelog.util - ユーティリティ
-    * DateTime - SQLiteの日時の文字列表現をいじくる
+    * DateTime - SQLiteの日時の文字列表現をいじくる[(sample)](https://github.com/pokutuna/lifelog-library/blob/master/src/test/java/com/pokutuna/lifelog/sample/DateTimeSample.java)
     * Exif - 写真から抽出されるExifデータ、現在のところ撮影日時、緯度、経度のみ対応
-    * ExifExtractor - java.io.FileからExifを抽出する
+    * ExifExtractor - java.io.FileからExifを抽出する[(sample)](https://github.com/pokutuna/lifelog-library/blob/master/src/test/java/com/pokutuna/lifelog/sample/ExifSample.java)
     * TimeUtil - 時刻を楽に扱う、DateTimeクラスが主に呼び出す
 * com.pokutuna.lifelog.parsing - ログパーサ
-    * LogParser - ログデータをパースする
+    * LogParser - ログデータをパースする[(sample)](https://github.com/pokutuna/lifelog-library/blob/master/src/test/java/com/pokutuna/lifelog/sample/LogParserSample.java)
     * LogToken - ログの各行、各行中のデータに対応するクラス集
     * Transformer - LogToken以下のクラスをcom.pokutuna.lifelog.db.model以下のクラスに変換
 * com.pokutuna.lifelog.sample - サンプルコード
@@ -55,8 +55,7 @@ scala 2.9.0-1
 (Exif抽出に使ってる)
 
 
-サンプルコード
+* Javaから利用するサンプル - https://github.com/pokutuna/lifelog-library/tree/master/src/test/java/com/pokutuna/lifelog/sample
 
-https://github.com/pokutuna/lifelog-library/tree/master/sample
 
 
