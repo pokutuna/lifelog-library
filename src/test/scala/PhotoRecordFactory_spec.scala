@@ -1,5 +1,6 @@
 package com.pokutuna.lifelog.test
-import com.pokutuna.lifelog.db.model.PhotoRecordFactory
+
+import com.pokutuna.lifelog.db.util.PhotoRecordFactory
 import java.io.File
 
 class PhotoRecordFactorySpec extends SpecHelper {

@@ -1,4 +1,4 @@
-package com.pokutuna.lifelog.db.model
+package com.pokutuna.lifelog.db.util
 
 import com.pokutuna.lifelog.db.model.LifelogModel.PhotoRecord
 import com.pokutuna.lifelog.util.DateTime
