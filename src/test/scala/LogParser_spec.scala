@@ -183,7 +183,9 @@ class LogParserSpec extends SpecHelper {
   describe("Read File") {
     it("should read dirty logfile") {
       val btlog = new FileReader("src/test/resources/test_btlogdata.tsv")
-      LogParser.run(btlog).successful should be === true
+      val result = LogParser.run(btlog)
+      result.successful should be === true
+      //println(result)
     }
   }
 }

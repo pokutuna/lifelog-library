@@ -26,12 +26,12 @@ object Transformer {
   }
 
   trait ToBtDetected extends ToDetectRecord {
-    self: HasAddress with HasDateTime =>
+    self: HasAddress with HasDate =>
     def toDetectRecord: DetectedRecord = BtDetected(address, TimeUtil.format(dateTime))
   }
 
   trait ToWifiDetected extends ToDetectRecord with HasSignal {
-    self: HasAddress with HasDateTime =>
+    self: HasAddress with HasDate =>
     def toDetectRecord: DetectedRecord = WifiDetected(address, TimeUtil.format(dateTime), signal)
   }
 }

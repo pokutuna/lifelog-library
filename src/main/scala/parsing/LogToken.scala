@@ -8,7 +8,7 @@ object LogToken {
   trait LogLine //root trait
 
   //detects
-  trait DetectLog extends LogLine with HasAddress with HasDateTime with HasDeviceName
+  trait DetectLog extends LogLine with HasAddress with HasDate with HasDeviceName with ToDeviceRecord with ToDetectRecord
   case class BtDetectLog(dateTime: Date, deviceName: String, address: String) extends DetectLog with ToBtDevice with ToBtDetected
   case class WifiDetectLog(dateTime: Date, deviceName: String, address: String, signal: Int) extends DetectLog with HasSignal with ToWifiDevice with ToWifiDetected
 
@@ -16,7 +16,7 @@ object LogToken {
   trait Annotation extends LogLine
   case class LoggerVersion(version: String) extends Annotation
   case class LoggerBDA(address: String) extends Annotation with HasAddress
-  trait ScanAnnotation extends Annotation with HasDateTime
+  trait ScanAnnotation extends Annotation with HasDate
   case class BtScan(dateTime: Date) extends ScanAnnotation
   case class WifiScan(dateTime: Date) extends ScanAnnotation
 
@@ -30,7 +30,7 @@ object LogToken {
     val address: String
   }
 
-  trait HasDateTime {
+  trait HasDate {
     val dateTime: Date
   }
 
