@@ -9,7 +9,33 @@ scala 2.9.0-1
 
 ## Packages
 
-com.pokutuna.Lifelog.db - DBを操作しちゃう系
+* com.pokutuna.lifelog.db - DBを操作しちゃう系
+    * model - DBのカラム等に対応するモデル
+        * LifelogModel - lifelog.db内の各写真データカラム対応するモデル(PhotoRecord)
+        * SensingModel - sensing.db内のデバイスとデバイス検出に対応するモデル
+    * table - ORMapperが利用するテーブル
+        * 略
+    * dao - DatabaseAccessObject(*)
+        * LifelogDAO - lifelog.dbに簡単にアクセス
+        * LifelogDAOForJava - java向け、返り値をSeq[T] -> java.util.List<T> にした
+        * SensingDAO - sensing.dbに簡単にアクセス
+        * SensingDAOForJava - LifelogDAOForJavaと同様
+    * util - DBに関するユーティリティ
+        * PhotoRecordFactory - java.io.FileからPhotoRecordを生成する
+* com.pokutuna.lifelog.util - ユーティリティ
+    * DateTime - SQLiteの日時の文字列表現をいじくる
+    * Exif - 写真から抽出されるExifデータ、現在のところ撮影日時、緯度、経度のみ対応
+    * ExifExtractor - java.io.FileからExifを抽出する
+    * TimeUtil - 時刻を楽に扱う、DateTimeクラスが主に呼び出す
+* com.pokutuna.lifelog.parsing - ログパーサ
+    * LogParser - ログデータをパースする
+    * LogToken - ログの各行、各行中のデータに対応するクラス集
+    * Transformer - LogToken以下のクラスをcom.pokutuna.lifelog.db.model以下のクラスに変換
+* com.pokutuna.lifelog.sample - サンプルコード
+    * DAOSample
+    * DateTimeSample
+    * ExifSample
+    * LogParserSample
 
 
 ## Javaのひとむけ
@@ -24,6 +50,9 @@ com.pokutuna.Lifelog.db - DBを操作しちゃう系
 
 [sqlitejdbc-v056](http://files.zentus.com/sqlitejdbc/sqlitejdbc-v056.jar)
 (たぶん他のでも動く)
+
+[metadata-extractor](http://code.google.com/p/metadata-extractor/downloads/detail?name=metadata-extractor-2.5.0-RC2.zip)
+(Exif抽出に使ってる)
 
 
 サンプルコード
