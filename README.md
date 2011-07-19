@@ -42,7 +42,7 @@ scala 2.9.0-1
 
 以下のjarをEclipseのビルドパスに追加して動かしてください
 
-[lifelog-library](https://github.com/pokutuna/lifelog-library/downloads/) から最新版
+[lifelog-library](https://github.com/pokutuna/lifelog-library/downloads/) から最新版のjar
 
 [scala-library-2.9.0-1](http://scala-tools.org/repo-releases/org/scala-lang/scala-library/2.9.0-1/scala-library-2.9.0-1.jar)
 
@@ -51,11 +51,8 @@ scala 2.9.0-1
 [sqlitejdbc-v056](http://files.zentus.com/sqlitejdbc/sqlitejdbc-v056.jar)
 (たぶん他のでも動く)
 
-[metadata-extractor](http://code.google.com/p/metadata-extractor/downloads/detail?name=metadata-extractor-2.5.0-RC2.zip)
+[metadata-extractor](http://code.google.com/p/metadata-extractor/downloads/detail?name=metadata-extractor-2.5.0-RC2.zip) を解凍して出てくるjar
 (Exif抽出に使ってる)
 
 
 * Javaから利用するサンプル - https://github.com/pokutuna/lifelog-library/tree/master/src/test/java/com/pokutuna/lifelog/sample
-
-
-
