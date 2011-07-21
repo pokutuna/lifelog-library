@@ -3,10 +3,10 @@ package com.pokutuna.lifelog.util
 import java.util.Calendar
 import java.util.Date
 
-case class DateTime private(time: String) {
+case class DateTime private(dateTime: String) {
 
-  lazy val toDate: Date = TimeUtil.parse(time)
-  def asString: String = time
+  lazy val toDate: Date = TimeUtil.parse(dateTime)
+  def asString: String = dateTime
 
   def year: Int = TimeUtil.year(toDate)
   def month: Int = TimeUtil.month(toDate)
@@ -14,6 +14,9 @@ case class DateTime private(time: String) {
   def hour: Int = TimeUtil.hour(toDate)
   def minute: Int = TimeUtil.minute(toDate)
   def second: Int = TimeUtil.second(toDate)
+
+  def date: String = DateTime.splitAtSpace(this.asString)._1
+  def time: String = DateTime.splitAtSpace(this.asString)._2
 
   def fromNow(year: Int = 0, month: Int = 0, day: Int = 0, hour: Int = 0, minute: Int = 0, second: Int = 0): DateTime =
     DateTime(TimeUtil.after(toDate, year, month, day, hour, minute, second))
@@ -33,6 +36,13 @@ object DateTime {
     val c = Calendar.getInstance
     c.set(year, month - 1, day, hour, minute, second)
     apply(c.getTime())
+  }
+
+  def splitAtSpace(date: String): (String, String) = {
+    date.split(" ") match {
+      case Array(date, time) => (date, time)
+      case _ => throw new RuntimeException
+    }
   }
 
   object Implicit {

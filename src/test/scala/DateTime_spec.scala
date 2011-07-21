@@ -30,6 +30,16 @@ class DateTimeSpec extends SpecHelper {
       a.ago(second = -30).asString should be ("2011-02-03 04:05:36")
       a.ago(year = 10).asString should be ("2001-02-03 04:05:06")
     }
+
+    it("should get date & time") {
+      val a = DateTime.format("2011-2-3 4:5:6")
+      a.date should be ("2011-02-03")
+      a.time should be ("04:05:06")
+    }
+
+    it("should throw ParseException when applying invalid String") {
+      evaluating { DateTime.format("") } should produce [java.text.ParseException]
+    }
   }
 
   describe("Implicits") {

@@ -28,6 +28,10 @@ public class DateTimeSample {
     System.out.println(dt.minute());  // => 28
     System.out.println(dt.second()); // => 0
 
+    //日付まで、時刻のみのアクセサ
+    System.out.println(dt.date()); // => 2011-07-18
+    System.out.println(dt.time()); // => 21:28:00
+
     //DateTimeインスタンスを基準に前後の時間を保持したDateTimeインスタンスを取得する
     //y,m,d,h,min,sのフィールドに差分を入れる、scalaからならdt.fromNow(minute = 3)とかNamedParameterで書けるようにしてある
     //未来の時刻を取得するにはDateTime#fromNowを使う、次は3分後の時刻を得る例
