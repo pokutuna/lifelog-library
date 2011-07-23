@@ -22,11 +22,14 @@ object ExifExtractor {
   }
 }
 
-class Exif(metadata:Metadata) {
+class Exif(metadata: => Metadata) {
 
   lazy val date:Option[Date] = try {
     val d = metadata.getDirectory(classOf[ExifSubIFDDirectory]).getDate(ExifSubIFDDirectory.TAG_DATETIME_ORIGINAL)
-    Some(d)
+    d match {
+      case d if d == null => None
+      case d => Some(d)
+    }
   } catch {
     case _ => None
   }
