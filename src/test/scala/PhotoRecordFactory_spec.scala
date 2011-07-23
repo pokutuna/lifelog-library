@@ -5,10 +5,8 @@ import java.io.File
 
 class PhotoRecordFactorySpec extends SpecHelper {
 
-  val tanuPhoto = new File("src/test/resources/tanu.jpg")
-  val iconPhoto = new File("src/test/resources/icon.jpg")
-
   describe("PhotoRecordFactory") {
+    val tanuPhoto = new File("src/test/resources/tanu.jpg")
     it("should create PhotoRecord from File") {
       val record = PhotoRecordFactory(tanuPhoto)
       record.directory should be ("src/test/resources")
@@ -26,6 +24,7 @@ class PhotoRecordFactorySpec extends SpecHelper {
       record.second should be === 11
     }
 
+    val iconPhoto = new File("src/test/resources/icon.jpg")
     it("should create PhotoRecord for non-Exif picture") {
       val record = PhotoRecordFactory("hoge", iconPhoto)
       record.directory should be ("hoge")
@@ -38,6 +37,38 @@ class PhotoRecordFactorySpec extends SpecHelper {
       record.year should be === 0
       record.day should be === 0
       record.minute should be === 0
+    }
+
+    val instagramPhoto = new File("src/test/resources/instagram.jpg")
+    it("should create PhotoRecord for pictures for Instagram") {
+      //NOTE: In extracting exif from instagram picture, it returns null.
+      val record = PhotoRecordFactory(instagramPhoto)
+      record.directory should be ("src/test/resources")
+      record.filename should be ("instagram.jpg")
+      record.orgDate should be ("")
+      record.latitude should be (0.0)
+      record.longitude should be (0.0)
+      record.year should be === 0
+      record.day should be === 0
+      record.minute should be === 0
+    }
+
+    val nonPictureFile = new File("src/test/resources/test_btlogdata.tsv")
+    it("should create PhotoRecord from a file is not picture") {
+      val record = PhotoRecordFactory(nonPictureFile)
+      record.directory should be ("src/test/resources")
+      record.filename should be ("test_btlogdata.tsv")
+      record.orgDate should be ("")
+      record.latitude should be (0.0)
+      record.longitude should be (0.0)
+      record.year should be === 0
+      record.day should be === 0
+      record.minute should be === 0
+    }
+
+    val notExistFile = new File("src/test/resources/non-exist-file")
+    it("should create PhotoRecord from a file is not exist") {
+      evaluating { PhotoRecordFactory(notExistFile) } should produce [javax.imageio.IIOException]
     }
   }
 }

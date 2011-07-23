@@ -1,11 +1,11 @@
 package com.pokutuna.lifelog.db.util
 
 import com.pokutuna.lifelog.db.model.LifelogModel.PhotoRecord
-import com.pokutuna.lifelog.util.DateTime
-import com.pokutuna.lifelog.util.ExifExtractor
+import com.pokutuna.lifelog.util.{DateTime, ExifExtractor}
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
+import scala.util.control.Exception._
 
 object PhotoRecordFactory {
 
@@ -13,6 +13,8 @@ object PhotoRecordFactory {
 
   def apply(directory: String, file: File): PhotoRecord = {
     val image = ImageIO.read(file)
+    val width: Option[Int] = allCatch.opt(image.getWidth)
+    val height: Option[Int] = allCatch.opt(image.getHeight)
     val exif = ExifExtractor.extract(file)
     val date: Option[DateTime] = exif.date match {
       case Some(d) => Some(DateTime(d))
@@ -25,8 +27,8 @@ object PhotoRecordFactory {
       date.map(_.asString).getOrElse(""),
       exif.latitude.getOrElse(0.0),
       exif.longitude.getOrElse(0.0),
-      image.getWidth(),
-      image.getHeight(),
+      width.getOrElse(0),
+      height.getOrElse(0),
       file.length().toInt,
       date.map(_.year).getOrElse(0),
       date.map(_.month).getOrElse(0),
