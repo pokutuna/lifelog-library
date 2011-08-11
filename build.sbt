@@ -2,7 +2,7 @@ name := "lifelog-library"
 
 version := "0.2.0"
 
-organization := "org.myproject"
+organization := "com.pokutuna"
 
 scalaVersion := "2.9.0-1"
 
@@ -19,4 +19,8 @@ scalacOptions += "-deprecation"
 watchSources ~= { (files: Seq[File]) =>
   files.filterNot(_.getPath.contains("src/test/resources"))
 }
+
+fork in run := true
+
+javaOptions in run += "-agentlib:hprof"
 
