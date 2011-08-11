@@ -27,6 +27,7 @@ scala 2.9.0-1
     * Exif - 写真から抽出されるExifデータ、現在のところ撮影日時、緯度、経度のみ対応
     * ExifExtractor - java.io.FileからExifを抽出する[(sample)](https://github.com/pokutuna/lifelog-library/blob/master/src/test/java/com/pokutuna/lifelog/sample/ExifSample.java)
     * TimeUtil - 時刻を楽に扱う、DateTimeクラスが主に呼び出す
+    * FileSelector - あるディレクトリ以下のファイルを正規表現でフィルタして取り出す[(sample)](https://github.com/pokutuna/lifelog-library/blob/master/src/test/java/com/pokutuna/lifelog/sample/FileSelectorSample.java)
 * com.pokutuna.lifelog.parsing - ログパーサ
     * LogParser - ログデータをパースする[(sample)](https://github.com/pokutuna/lifelog-library/blob/master/src/test/java/com/pokutuna/lifelog/sample/LogParserSample.java)
     * LogToken - ログの各行、各行中のデータに対応するクラス集
