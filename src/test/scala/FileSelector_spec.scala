@@ -5,8 +5,7 @@ import com.pokutuna.lifelog.util.FileSelector._
 class FileSelectorSpec extends SpecHelper {
   describe("FileSelector") {
     it("should select files from path") {
-      val files = FileSelector.select("lib/").map(_.getPath)
-      files should be (Seq("lib/metadata-extractor-2.5.0-RC2.jar", "lib/xmpcore.jar"))
+      pending
     }
 
     it("should select files with filter") {
