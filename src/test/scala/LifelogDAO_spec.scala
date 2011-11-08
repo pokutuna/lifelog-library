@@ -83,4 +83,13 @@ class LifelogDAOSpec extends SpecHelper {
     }
   }
 
+  describe("Paging Drop & Take") {
+    it("should dorp & take") {
+      val a = db.photoTakenIn("2011-07-07 00:00:00", "2011-07-08 00:00:00", offset = 2, limit = 1)
+      a.toList should be (List(photo3))
+      val b = db.photoTakenIn("2011-07-07 00:00:00", "2011-07-08 00:00:00", offset = 10, limit = 1)
+      b.toList should be (List())
+    }
+  }
+
 }

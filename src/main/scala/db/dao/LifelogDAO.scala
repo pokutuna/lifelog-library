@@ -5,11 +5,13 @@ import com.pokutuna.lifelog.db.table.LifelogTable._
 import org.scalaquery.ql._
 import org.scalaquery.ql.TypeMapper._
 import org.scalaquery.ql.basic.BasicDriver.Implicit._
-import org.scalaquery.ql.extended.{ExtendedTable => Table, _}
+import org.scalaquery.ql.extended.{ExtendedTable => Table}
+import org.scalaquery.ql.extended.SQLiteDriver
 import org.scalaquery.session._
 import org.scalaquery.session.Database._
 
 class LifelogDAO(path: String) extends DatabaseAccessObject(path, SQLiteDriver) {
+  import SQLiteDriver.Implicit._
 
   val tables = List(Photos)
 
@@ -20,6 +22,16 @@ class LifelogDAO(path: String) extends DatabaseAccessObject(path, SQLiteDriver) 
         _ <- Query.orderBy(b.dateTime asc)
       } yield b
       q.list
+    }
+  }
+
+  def photoTakenIn(from: String, to: String, offset: Int, limit: Int) = {
+    db.withSession {
+      val q = for {
+        b <- Photos.where(p => p.dateTime >= from && p.dateTime <= to)
+        _ <- Query.orderBy(b.dateTime asc)
+      } yield b
+      q.drop(offset).take(limit).list
     }
   }
 
