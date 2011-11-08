@@ -57,3 +57,14 @@ scala 2.9.0-1
 
 
 * Javaから利用するサンプル - https://github.com/pokutuna/lifelog-library/tree/master/src/test/java/com/pokutuna/lifelog/sample
+
+
+# Using Libraries
+
+* metadata-extractor 
+    * http://drewnoakes.com/code/exif/
+
+* anorm(2.0-beta)
+    * https://github.com/playframework/Play20
+
+These are provided under [Apache version 2.0 license](http://www.apache.org/licenses/LICENSE-2.0).
