@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS photo;
 CREATE TABLE photo (
   id integer PRIMARY KEY AUTOINCREMENT,
   directory text,
@@ -17,9 +18,13 @@ CREATE TABLE photo (
   second integer,
   comment text
 );
+DROP INDEX IF EXISTS photo_directory_filename;
 CREATE INDEX photo_directory_filename on photo(directory, filename);
+DROP INDEX IF EXISTS photo_gps;
 CREATE INDEX photo_gps on photo(latitude, longitude);
+DROP INDEX IF EXISTS photo_org_date;
 CREATE INDEX photo_org_date on photo(org_date);
+DROP INDEX IF EXISTS photo_ymdhms;
 CREATE INDEX photo_ymdhms on photo(year, month, day, hour, minute, second);
 
 -- * original photo table *
