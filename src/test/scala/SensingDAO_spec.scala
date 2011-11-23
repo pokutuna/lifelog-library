@@ -1,30 +1,30 @@
 package com.pokutuna.lifelog.test
 
 import com.pokutuna.lifelog.db.dao._
-import com.pokutuna.lifelog.db.model.SensingModel._
+import com.pokutuna.lifelog.db.model._
+import anorm._
 
-class SensingDAOSpec extends SpecHelper {
+class SensingDBSpec extends SpecHelper {
 
-  val db = new SensingDAO("jdbc:sqlite:src/test/resources/test_sensing.db")
+  val db = new SensingDB("src/test/resources/test_sensing.db")
 
   val devA = BtDevice("AddrA", "DevNameA")
   val devB = WifiDevice("AddrB", "DevNameB")
   val devC = BtDevice("AddrC", "DevNameC")
   val devD = WifiDevice("AddrD", "DevNameD")
 
-  val recA1 = BtDetected("AddrA", "2011-07-07 00:01:00")
-  val recA2 = BtDetected("AddrA", "2011-07-08 00:02:00")
-  val recAOld = BtDetected("AddrA", "2000-07-07 00:03:00")
-  val recB1 = WifiDetected("AddrB", "2011-07-07 00:00:00", -10)
-  val recB2 = WifiDetected("AddrB", "2011-07-07 00:01:00", -10)
-  val recB3 = WifiDetected("AddrD", "2011-07-07 00:02:00", -10)
-  val recLatest = WifiDetected("AddrE", "2012-07-07 00:00:00", -10)
+  val recA1 = BtDetected("AddrA", "2011-07-07 00:01:00", 0)
+  val recA2 = BtDetected("AddrA", "2011-07-08 00:02:00", 0)
+  val recAOld = BtDetected("AddrA", "2000-07-07 00:03:00", 0)
+  val recB1 = WifiDetected("AddrB", "2011-07-07 00:00:00", -10, 0)
+  val recB2 = WifiDetected("AddrB", "2011-07-07 00:01:00", -10, 0)
+  val recB3 = WifiDetected("AddrD", "2011-07-07 00:02:00", -10, 0)
+  val recLatest = WifiDetected("AddrE", "2012-07-07 00:00:00", -10, 0)
 
 
   def cleanDB = {
     import scala.util.control.Exception._
-    allCatch.opt(db.dropAll)
-    allCatch.opt(db.createAll)
+    allCatch.opt(db.applySchema)
   }
 
   def insertExamples = {
@@ -96,13 +96,13 @@ class SensingDAOSpec extends SpecHelper {
 
   describe("Other") {
     it("should get latest detection date") {
-      db.latestDate should be ("2012-07-07 00:00:00")
+      db.latestDateTime should be ("2012-07-07 00:00:00")
     }
   }
 
   describe("Insersion") {
     it("should insert device") {
-      db.insertBtDevice("AddrInsert", "DevNameInsert")
+      db.insertBtDevice(BtDevice("AddrInsert", "DevNameInsert"))
       db.isBluetooth("AddrInsert") should be (true)
       db.addressToName("AddrInsert") should be (Some("DevNameInsert"))
 
@@ -112,37 +112,44 @@ class SensingDAOSpec extends SpecHelper {
     }
 
     it("should update device name") {
-      db.insertBtDevice("AddrInsert", "DevNameInsert")
+      db.insertBtDevice(BtDevice("AddrInsert", "DevNameInsert"))
       db.addressToName("AddrInsert") should be (Some("DevNameInsert"))
-      db.insertBtDevice("AddrInsert", "DevNewName")
+      db.insertBtDevice(BtDevice("AddrInsert", "DevNewName"))
       db.addressToName("AddrInsert") should be (Some("DevNewName"))
     }
 
     it("should insert detection") {
-      db.insertBtDetected("AddrInsert", "2013-07-07 00:00:00")
+      db.insertBtDetected(BtDetected("AddrInsert", "2013-07-07 00:00:00", 0))
       val record = db.btDetectedIn("2013-07-06 00:00:00", "2013-07-08 00:00:00").toList
-      record should be (List(BtDetected("AddrInsert", "2013-07-07 00:00:00")))
+      record should be (List(BtDetected("AddrInsert", "2013-07-07 00:00:00", 0)))
 
-      db.insertWifiDetected(WifiDetected("AddrInsert", "2013-07-08 00:00:00", -10))
+      db.insertWifiDetected(WifiDetected("AddrInsert", "2013-07-08 00:00:00", -10, 0))
       val records = db.detectedIn("2013-07-06 00:00:00", "2013-07-09 00:00:00").toList
-      records should be (List(BtDetected("AddrInsert", "2013-07-07 00:00:00"), WifiDetected("AddrInsert", "2013-07-08 00:00:00", -10)))
+      records should be (List(BtDetected("AddrInsert", "2013-07-07 00:00:00", 0), WifiDetected("AddrInsert", "2013-07-08 00:00:00", -10, 0)))
     }
 
     it("should not insert same detection informations") {
-      db.insertBtDetected(BtDetected("AddrInsert", "2013-07-07 00:00:00"))
-      db.insertBtDetected(BtDetected("AddrInsert", "2013-07-07 00:00:00"))
+      db.insertBtDetected(BtDetected("AddrInsert", "2013-07-07 00:00:00", 0))
+      db.insertBtDetected(BtDetected("AddrInsert", "2013-07-07 00:00:00", 0))
       val record = db.btDetectedIn("2013-07-06 00:00:00", "2013-07-08 00:00:00").toList
-      record should be (List(BtDetected("AddrInsert", "2013-07-07 00:00:00")))
+      record should be (List(BtDetected("AddrInsert", "2013-07-07 00:00:00", 0)))
+    }
+  }
+
+  describe("SensingDB Migrating") {
+    it("should read schema file") {
+      val mydb = new SensingDB(":memory:")
+      mydb.readSchema
+    }
+
+    it("should apply schema") {
+      val mydb = new SensingDB("src/test/resources/test_sensing.db")
+      mydb.applySchema
+      mydb.withConnection { implicit conn =>
+        SQL("insert into bt_detected values ({address}, {date_time}, {file_id});").on(
+          'address -> "hoge", 'date_time -> "2011-11-15 15:16:00", 'file_id -> 1
+        ).executeUpdate()
+      }
     }
   }
 }
-
-
-
-
-
-
-
-
-
-

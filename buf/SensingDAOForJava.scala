@@ -1,9 +1,9 @@
 package com.pokutuna.lifelog.db.dao
 
-import com.pokutuna.lifelog.db.model.SensingModel._
+import com.pokutuna.lifelog.db.model._
 import scala.collection.JavaConverters._
 
-class SensingDAOForJava(path: String) {
+class SensingDBForJava(path: String) {
   val dao = new SensingDAO(path)
 
   def detectedIn(from: String, to: String): java.util.List[DetectedRecord] = dao.detectedIn(from, to).asJava

@@ -24,3 +24,4 @@ fork in run := true
 
 javaOptions in run += "-agentlib:hprof"
 
+traceLevel := 20

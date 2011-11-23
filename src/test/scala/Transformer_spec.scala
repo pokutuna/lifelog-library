@@ -1,7 +1,7 @@
 package com.pokutuna.lifelog.test
 
 import com.pokutuna.lifelog.parsing.Transformer._
-import com.pokutuna.lifelog.db.model.SensingModel._
+import com.pokutuna.lifelog.db.model._
 import com.pokutuna.lifelog.parsing.LogToken._
 import com.pokutuna.lifelog.util.TimeUtil
 
@@ -12,8 +12,8 @@ class TransformerSpec extends SpecHelper {
     val w = WifiDetectLog(TimeUtil.parse("2011-06-06 06:49:44"), "TUNACAN", "00:18:84:89:A9:74", -37)
 
     it("should convert DetectLog to DetectRecord") {
-      b.toDetectRecord should be (BtDetected("58:55:CA:FB:56:D2", "2011-06-06 06:49:46"))
-      w.toDetectRecord should be (WifiDetected("00:18:84:89:A9:74", "2011-06-06 06:49:44", -37))
+      b.toDetectRecord should be (BtDetected("58:55:CA:FB:56:D2", "2011-06-06 06:49:46", 0))
+      w.toDetectRecord should be (WifiDetected("00:18:84:89:A9:74", "2011-06-06 06:49:44", -37, 0))
     }
 
     it("should convert DetectLog to DeviceRecord") {

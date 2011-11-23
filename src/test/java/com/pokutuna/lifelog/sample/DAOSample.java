@@ -1,7 +1,7 @@
 package com.pokutuna.lifelog.sample;
 
 import com.pokutuna.lifelog.db.dao.*;
-import com.pokutuna.lifelog.db.model.SensingModel.*;
+import com.pokutuna.lifelog.db.model.*;
 import com.pokutuna.lifelog.db.model.LifelogModel.*;
 import java.util.List;
 
@@ -9,20 +9,20 @@ public class DAOSample {
 
   public static void main(String[] args) {
 
-    //DAO(データベースアクセスオブジェクト)の作成
-    //jdbc:sqlite:[path] で指定する
-    //ここではsensing.dbを操作するSensingDAOForJavaをインスタンス化
-    SensingDAOForJava sdao = new SensingDAOForJava("jdbc:sqlite:sensing.db");
+    //DAO(データベースアクセスオブジェクト)の作成
+    //jdbc:sqlite:[path] で指定する
+    //ここではsensing.dbを操作するSensingDAOForJavaをインスタンス化
+    SensingDBForJava sdao = new SensingDBForJava("sensing.db");
 
-    //SensingDAOが返すデータベースのカラムに対応するオブジェクトは
+    //SensingDAOが返すデータベースのカラムに対応するオブジェクトは
     //com.pokutuna.Lifelog.db.model.SensingModel以下の、
-    //DetectedRecord(検出したデバイスアドレスと時刻を持つ)インタフェースを実装するBtDetected, WifiDetected、
-    //DeviceRecord(検出したデバイスごとのアドレスと名前の対応を持つ)インタフェースを実装するBtDevice, WifiDeviceがある
+    //DetectedRecord(検出したデバイスアドレスと時刻を持つ)インタフェースを実装するBtDetected, WifiDetected、
+    //DeviceRecord(検出したデバイスごとのアドレスと名前の対応を持つ)インタフェースを実装するBtDevice, WifiDeviceがある
 
-    //DeviceRecordはaddress(), name()を持ち、それぞれデバイスアドレスとデバイス名を返す
-    //DetectedRecordはaddress(), dateTime()を持ち、デバイスアドレスと検出時刻を返す
+    //DeviceRecordはaddress(), name()を持ち、それぞれデバイスアドレスとデバイス名を返す
+    //DetectedRecordはaddress(), dateTime()を持ち、デバイスアドレスと検出時刻を返す
 
-    //detectedInで指定された期間内に検出したBt,Wifiのレコードを返す
+    //detectedInで指定された期間内に検出したBt,Wifiのレコードを返す
     List<DetectedRecord> detected = sdao.detectedIn("2011-06-01 12:00:00", "2011-06-01 15:00:00");
     for (DetectedRecord de : detected) {
       System.out.println(de);
@@ -41,22 +41,22 @@ public class DAOSample {
      */
 
     //他に, BTについての検出のみを返す List<BtDetected> btDetectedIn(from, to)
-    //Wifiについての検出のみを返すList<WifiDetected> wifiDetectedIn(from, to)等がある
-    //名前とシグネチャでだいたい分かるようにしてるのでわかんなかったらきいてください。
+    //Wifiについての検出のみを返すList<WifiDetected> wifiDetectedIn(from, to)等がある
+    //名前とシグネチャでだいたい分かるようにしてるのでわかんなかったらきいてください。
 
-    sdao.countDetection("58:55:CA:FB:56:D2"); //アドレスの検出回数
-    sdao.latestDate(); //最後にロギングされた時刻
-    sdao.addressToName("58:55:CA:FB:56:D2"); //アドレスからデバイス名を取得、未定義なら空文字列""を返す
-    sdao.isBluetooth("58:55:CA:FB:56:D2"); //Btデバイスならtrueを返す
-    sdao.isWifi("58:55:CA:FB:56:D2"); //Wifiデバイスならtrueを返す
+    sdao.countDetection("58:55:CA:FB:56:D2"); //アドレスの検出回数
+    sdao.latestDateTime(); //最後にロギングされた時刻
+    sdao.addressToName("58:55:CA:FB:56:D2"); //アドレスからデバイス名を取得、未定義なら空文字列""を返す
+    sdao.isBluetooth("58:55:CA:FB:56:D2"); //Btデバイスならtrueを返す
+    sdao.isWifi("58:55:CA:FB:56:D2"); //Wifiデバイスならtrueを返す
 
-    //他にdaoj.insert*等のデータベースへ追加するメソッドもありますが割愛します。
+    //他にdaoj.insert*等のデータベースへ追加するメソッドもありますが割愛します。
 
     //lifelog.dbを扱うLifelogDAOもある
     LifelogDAOForJava lldao = new LifelogDAOForJava("jdbc:sqlite:Lifelog_110606.db"); //SensingDAOForJavaと同様
 
     List<PhotoRecord> photos = lldao.photoTakenIn("2010-06-01 12:00:00", "2010-06-02 12:00:00");
-    //期間内に撮影されたPhotoRecordオブジェクトのリストをphotosに代入
+    //期間内に撮影されたPhotoRecordオブジェクトのリストをphotosに代入
     for(PhotoRecord p : photos) {
       System.out.println(p);
     }
@@ -66,8 +66,8 @@ public class DAOSample {
      PhotoRecord(2010\201006\2010_0601,IMG_2485.JPG,2010-06-01 12:16:16,34.908167,135.1595,2048,1536,1294904,2010,6,1,12,16,16)
      */
 
-    //PhotoRecordオブジェクトはcom.pokutuna.Lifelog.db.model.LifelogModel以下にある。
-    //実際のDBはいろいろごちゃごちゃレコードがあるけど、とりあえず以下のみサポート
+    //PhotoRecordオブジェクトはcom.pokutuna.Lifelog.db.model.LifelogModel以下にある。
+    //実際のDBはいろいろごちゃごちゃレコードがあるけど、とりあえず以下のみサポート
     /*
     orgDate: String,
     latitude: double,
@@ -83,10 +83,10 @@ public class DAOSample {
     second: int
     */
 
-    lldao.photoTakenWhere(35.0, 36.0, 134.0, 135.0); //撮影された緯度経度が範囲内にあるPhotoRecordオブジェクトのリストを返す
-    lldao.existsFile("IMG_1325.JPG"); //与えられたfilenameを持つPhotoRecordがDB内にあればtrue 
-    lldao.existsFile("~/Picture", "IMG_1325.JPG"); //与え要られたdirectory、filenameを持つPhotoRecordがDBにあればtrue
+    lldao.photoTakenWhere(35.0, 36.0, 134.0, 135.0); //撮影された緯度経度が範囲内にあるPhotoRecordオブジェクトのリストを返す
+    lldao.existsFile("IMG_1325.JPG"); //与えられたfilenameを持つPhotoRecordがDB内にあればtrue
+    lldao.existsFile("~/Picture", "IMG_1325.JPG"); //与え要られたdirectory、filenameを持つPhotoRecordがDBにあればtrue
 
-    //こちらもinsertがあるけどまあわかるはず
+    //こちらもinsertがあるけどまあわかるはず
   }
 }
