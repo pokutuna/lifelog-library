@@ -24,7 +24,7 @@ class SensingDB(path: String) extends Database(path) with Schema {
     }
   }
 
-  def btDetectedIn(start: String, end: String, offset: Int, limit: Int) = {
+  def btDetectedIn(start: String, end: String, offset: Int, limit: Int): Seq[BtDetected] = {
     withConnection { implicit connection =>
       BtDetected.findByDateTime(start, end, offset, limit)
     }
@@ -36,9 +36,37 @@ class SensingDB(path: String) extends Database(path) with Schema {
     }
   }
 
-  def wifiDetectedIn(start: String, end: String, offset: Int, limit: Int) = {
+  def wifiDetectedIn(start: String, end: String, offset: Int, limit: Int): Seq[WifiDetected] = {
     withConnection { implicit connection =>
       WifiDetected.findByDateTime(start, end, offset, limit)
+    }
+  }
+
+  def searchDatePrefix(datePrefix: String): Seq[DetectedRecord] = {
+    (btSearchDatePrefix(datePrefix) ++ wifiSearchDatePrefix(datePrefix)).sortBy(_.dateTime)
+  }
+
+  def btSearchDatePrefix(datePrefix: String): Seq[BtDetected] = {
+    withConnection { implicit connection =>
+      BtDetected.searchDatePrefix(datePrefix)
+    }
+  }
+
+  def btSearchDatePrefix(datePrefix: String, offset: Int, limit: Int): Seq[BtDetected] = {
+    withConnection { implicit connection =>
+      BtDetected.searchDatePrefix(datePrefix, offset, limit)
+    }
+  }
+
+  def wifiSearchDatePrefix(datePrefix: String): Seq[WifiDetected] = {
+    withConnection { implicit connection =>
+      WifiDetected.searchDatePrefix(datePrefix)
+    }
+  }
+
+  def wifiSearchDatePrefix(datePrefix: String, offset: Int, limit: Int): Seq[WifiDetected] = {
+    withConnection { implicit connection =>
+      WifiDetected.searchDatePrefix(datePrefix, offset, limit)
     }
   }
 

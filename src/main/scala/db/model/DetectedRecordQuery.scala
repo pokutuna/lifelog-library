@@ -52,6 +52,18 @@ trait DetectedRecordQuery[T <: DetectedRecord] {
     ).as(simple *)
   }
 
+  def searchDatePrefix(datePrefix: String)(implicit connection: Connection): Seq[T] = {
+    SQL(
+      "select * from " + tableName + " where date_time glob {dateTime} order by date_time"
+    ).on('dateTime -> (datePrefix + "*")).as(simple *)
+  }
+
+  def searchDatePrefix(datePrefix: String, offset: Int, limit: Int)(implicit connection: Connection): Seq[T] = {
+    SQL(
+      "select * from " + tableName + " where date_time glob {dateTime} order by date_time limit {limit} offset {offset}"
+    ).on('dateTime -> (datePrefix + "*"), 'offset -> offset, 'limit -> limit).as(simple *)
+  }
+
   def countAddress(address: String)(implicit connection: Connection): Int = {
     SQL(
       "select count(*) from " + tableName + " where address = {address}"

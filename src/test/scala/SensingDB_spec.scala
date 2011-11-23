@@ -69,6 +69,20 @@ class SensingDBSpec extends SpecHelper {
     }
   }
 
+  describe("Device Detected In with Paging") {
+    it("should get WifiRecord with Paging") {
+      val records = db.wifiDetectedIn("2011-07-07 00:00:00", "2011-07-07 00:02:59", 1, 1).toList
+      records should be (List(recB2))
+    }
+  }
+
+  describe("Search Detected") {
+    it("should get DetectedRecord with Glob search") {
+      val records = db.searchDatePrefix("2011-07-07 ").toList
+      records should be (List(recB1, recA1, recB2, recB3))
+    }
+  }
+
   describe("Methods for Address") {
     it("should get device name by its address") {
       db.addressToName("AddrA") should be (Some("DevNameA"))
