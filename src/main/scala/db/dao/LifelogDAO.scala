@@ -10,6 +10,9 @@ import org.scalaquery.ql.extended.SQLiteDriver
 import org.scalaquery.session._
 import org.scalaquery.session.Database._
 
+import anorm._
+import anorm.SqlParser._
+
 class LifelogDAO(path: String) extends DatabaseAccessObject(path, SQLiteDriver) {
   import SQLiteDriver.Implicit._
 
