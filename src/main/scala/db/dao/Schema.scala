@@ -21,7 +21,7 @@ trait Schema {
     ).map(_ + ";")
   }
 
-  def applySchema = {
+  def applySchema() = {
     withConnection { implicit c =>
       self.schemaStatements.foreach { statement =>
         SQL(statement).executeUpdate()

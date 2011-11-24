@@ -9,7 +9,9 @@ scalaVersion := "2.9.1"
 libraryDependencies ++= Seq(
   "org.scalatest" % "scalatest_2.9.0" % "1.6.1",
   "org.scalaquery" % "scalaquery_2.9.0-1" % "0.9.5",
-  "org.sqlite" % "sqlitejdbc" % "v056" from "http://files.zentus.com/sqlitejdbc/sqlitejdbc-v056.jar"
+  "org.sqlite" % "sqlitejdbc" % "v056" from "http://files.zentus.com/sqlitejdbc/sqlitejdbc-v056.jar",
+  "com.github.scala-incubator.io" %% "scala-io-core" % "0.2.0",
+  "com.github.scala-incubator.io" %% "scala-io-file" % "0.2.0"
 )
 
 javacOptions ++= Seq("-encoding", "utf8")
@@ -22,6 +24,6 @@ watchSources ~= { (files: Seq[File]) =>
 
 fork in run := true
 
-javaOptions in run += "-agentlib:hprof"
+// javaOptions in run += "-agentlib:hprof"
 
 traceLevel := 20
