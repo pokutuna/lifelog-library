@@ -1,25 +1,24 @@
 package com.pokutuna.lifelog.test
 
 import com.pokutuna.lifelog.db.dao._
-import com.pokutuna.lifelog.db.model.LifelogModel._
+import com.pokutuna.lifelog.db.model._
 
 class LifelogDAOSpec extends SpecHelper {
 
-  val db = new LifelogDAO("jdbc:sqlite:src/test/resources/test_lifelog.db")
+  val db = new LifelogDB("src/test/resources/test_lifelog.db")
 
-  val photo1 = PhotoRecord("dir1", "fn1", "2011-07-07 00:00:00", 35.0, 135.0, 10, 10, 10, 2011, 7, 7, 0, 0, 0)
-  val photo2 = PhotoRecord("dir2", "fn2", "2011-07-07 00:01:00", 36.0, 136.0, 10, 10, 10, 2011, 7, 7, 0, 1, 0)
-  val photo3 = PhotoRecord("dir3", "fn3", "2011-07-07 00:02:00", 35.5, 135.0, 10, 10, 10, 2011, 7, 7, 0, 2, 0)
-  val photo4 = PhotoRecord("dir4", "fn3", "2011-07-07 00:03:00", 34.5, 134.5, 10, 10, 10, 2011, 7, 7, 0, 3, 0)
+  val photo1 = PhotoRecord("dir1", "fn1", "2011-07-07 00:00:00", 35.0, 135.0, 10, 10, 10, 2011, 7, 7, 0, 0, 0, "hoge1")
+  val photo2 = PhotoRecord("dir2", "fn2", "2011-07-07 00:01:00", 36.0, 136.0, 10, 10, 10, 2011, 7, 7, 0, 1, 0, "hoge2")
+  val photo3 = PhotoRecord("dir3", "fn3", "2011-07-07 00:02:00", 36.5, 135.0, 10, 10, 10, 2011, 7, 7, 0, 2, 0, "hoge3")
+  val photo4 = PhotoRecord("dir4", "fn3", "2011-07-07 00:03:00", 34.5, 134.5, 10, 10, 10, 2011, 7, 7, 0, 3, 0, "hoge4")
 
   def cleanDB = {
     import scala.util.control.Exception._
-    allCatch.opt(db.dropAll)
-    allCatch.opt(db.createAll)
+    allCatch.opt(db.applySchema)
   }
 
   def insertExamples = {
-    List(photo1, photo2, photo3, photo4).foreach(p => db.insertPhotoRecord(p))
+    List(photo1, photo2, photo3, photo4).foreach(p => db.insertPhoto(p))
   }
 
   override def beforeEach = {
@@ -42,14 +41,14 @@ class LifelogDAOSpec extends SpecHelper {
 
   describe("Photo Taken Where") {
     it("should get PhotoRecord") {
-      val records1 = db.photoTakenWhere(34.0, 35.0, 134.0, 134.5).toSet
+      val records1 = db.photoTakenWhere(34.0, 134.0, 0.5).toSet
       records1 should be (Set(photo4))
 
-      val records2 = db.photoTakenWhere(0.0, 0.0, 0.0, 0.0).toSet
+      val records2 = db.photoTakenWhere(0.0, 0.0, 0.0).toSet
       records2 should be (Set())
 
-      val records3 = db.photoTakenWhere(0.0, 180.0, 134.0, 135.0).toSet
-      records3 should be (Set(photo1, photo3, photo4))
+      val records3 = db.photoTakenWhere(35.0, 134.5, 0.5).toSet
+      records3 should be (Set(photo1, photo4))
     }
   }
 
@@ -74,20 +73,20 @@ class LifelogDAOSpec extends SpecHelper {
 
   describe("Insert Photo Records") {
     it("should insert PhotoRecord") {
-      val photo = PhotoRecord("dir5", "fn5", "hogedate", 35.0, 135.0, 10, 10, 10, 2011, 7, 7, 0, 0, 0)
-      db.insertPhotoRecord(photo)
+      val photo = PhotoRecord("dir5", "fn5", "hogedate", 35.0, 135.0, 10, 10, 10, 2011, 7, 7, 0, 0, 0, "fuga")
+      db.insertPhoto(photo)
       db.existsFile("dir5", "fn5") should be (true)
 
-      db.insertPhotoRecord(photo)
+      db.insertPhoto(photo)
       db.photoTakenIn("hogedate", "hogedate").toList should be (List(photo, photo))
     }
   }
 
   describe("Paging Drop & Take") {
     it("should dorp & take") {
-      val a = db.photoTakenIn("2011-07-07 00:00:00", "2011-07-08 00:00:00", offset = 2, limit = 1)
+      val a = db.photoTakenIn("2011-07-07 00:00:00", "2011-07-08 00:00:00", 2, 1)
       a.toList should be (List(photo3))
-      val b = db.photoTakenIn("2011-07-07 00:00:00", "2011-07-08 00:00:00", offset = 10, limit = 1)
+      val b = db.photoTakenIn("2011-07-07 00:00:00", "2011-07-08 00:00:00", 10, 1)
       b.toList should be (List())
     }
   }

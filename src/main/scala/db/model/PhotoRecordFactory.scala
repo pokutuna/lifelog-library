@@ -1,7 +1,9 @@
 package com.pokutuna.lifelog.db.util
 
-import com.pokutuna.lifelog.db.model.LifelogModel.PhotoRecord
+import com.pokutuna.lifelog.db.model.PhotoRecord
 import com.pokutuna.lifelog.util.{DateTime, ExifExtractor}
+import anorm._
+import anorm.SqlParser._
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
@@ -35,6 +37,7 @@ object PhotoRecordFactory {
       date.map(_.day).getOrElse(0),
       date.map(_.hour).getOrElse(0),
       date.map(_.minute).getOrElse(0),
-      date.map(_.second).getOrElse(0))
+      date.map(_.second).getOrElse(0),
+      "")
   }
 }

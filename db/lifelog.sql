@@ -1,6 +1,5 @@
 DROP TABLE IF EXISTS photo;
 CREATE TABLE photo (
-  id integer PRIMARY KEY AUTOINCREMENT,
   directory text,
   filename text,
   org_date text,
@@ -8,7 +7,6 @@ CREATE TABLE photo (
   longitude real,
   width integer,
   height integer,
-  file_time text,
   file_size integer,
   year integer,
   month integer,

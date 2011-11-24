@@ -40,13 +40,13 @@ trait DetectedRecordQuery[T <: DetectedRecord] {
 
   def findByDateTime(start: String, end: String)(implicit connection: Connection): Seq[T] = {
     SQL(
-      "select * from " + tableName + " where {startTime} <= date_time and date_time < {endTime} order by date_time"
+      "select * from " + tableName + " where {startTime} <= date_time and date_time <= {endTime} order by date_time"
     ).on('startTime -> start, 'endTime -> end).as(simple *)
   }
 
   def findByDateTime(start: String, end: String, offset: Int, limit: Int)(implicit connection: Connection): Seq[T] = {
     SQL(
-      "select * from " + tableName + " where {startTime} <= date_time and date_time < {endTime} order by date_time limit {limit} offset {offset}"
+      "select * from " + tableName + " where {startTime} <= date_time and date_time <= {endTime} order by date_time limit {limit} offset {offset}"
     ).on(
       'startTime -> start, 'endTime -> end, 'limit -> limit, 'offset -> offset
     ).as(simple *)
