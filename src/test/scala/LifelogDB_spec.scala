@@ -3,7 +3,7 @@ package com.pokutuna.lifelog.test
 import com.pokutuna.lifelog.db.dao._
 import com.pokutuna.lifelog.db.model._
 
-class LifelogDAOSpec extends SpecHelper {
+class LifelogDBSpec extends SpecHelper {
 
   val db = new LifelogDB("src/test/resources/test_lifelog.db")
 
