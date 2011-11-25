@@ -21,6 +21,8 @@ class SensingDBSpec extends SpecHelper {
   val recB3 = WifiDetected("AddrD", "2011-07-07 00:02:00", -10, 0)
   val recLatest = WifiDetected("AddrE", "2012-07-07 00:00:00", -10, 0)
 
+  val regFile1 = new RegisteredFile("hoge", "hexhoge")
+  val regFile2 = new RegisteredFile("fuga", "hexfuga")
 
   def cleanDB = {
     import scala.util.control.Exception._
@@ -164,6 +166,22 @@ class SensingDBSpec extends SpecHelper {
           'address -> "hoge", 'date_time -> "2011-11-15 15:16:00", 'file_id -> 1
         ).executeUpdate()
       }
+    }
+  }
+
+  describe("Registered File") {
+    it("should insert file and return id") {
+      db.insertRegisteredFile(regFile1) should be (1)
+      db.insertRegisteredFile(regFile2) should be (2)
+    }
+
+    it("should find registered file") {
+      db.insertRegisteredFile(regFile1)
+      db.insertRegisteredFile(regFile2)
+
+      db.findRegisteredFile(regFile1).map(_.fileId) should be (Some(Id(1)))
+      db.findRegisteredFile(regFile2).map(_.fileId) should be (Some(Id(2)))
+      db.findRegisteredFile(new RegisteredFile("a", "b")).map(_.fileId) should be (None)
     }
   }
 }

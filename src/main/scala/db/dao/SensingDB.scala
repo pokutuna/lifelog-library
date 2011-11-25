@@ -183,4 +183,16 @@ class SensingDB(path: String) extends Database(path) with Schema {
     if (latests._1 >= latests._2) latests._1 else latests._2
   }
 
+  def insertRegisteredFile(file: RegisteredFile): Int = {
+    withTransaction { implicit connection =>
+      RegisteredFile.insert(file)
+      RegisteredFile.find(file).get.fileId.get
+    }
+  }
+
+  def findRegisteredFile(file: RegisteredFile): Option[RegisteredFile] = {
+    withConnection { implicit connection =>
+      RegisteredFile.find(file)
+    }
+  }
 }
