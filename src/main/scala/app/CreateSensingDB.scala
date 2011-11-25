@@ -5,7 +5,6 @@ import com.pokutuna.lifelog.db.model._
 import com.pokutuna.lifelog.db._
 import com.pokutuna.lifelog.db.model._
 import com.pokutuna.lifelog.db.util._
-import com.pokutuna.lifelog.db.dao._
 import com.pokutuna.lifelog.parsing.LogParser
 import com.pokutuna.lifelog.parsing.LogToken._
 import com.pokutuna.lifelog.util._
@@ -51,10 +50,7 @@ object CreateSensingDB {
   }
 
   def run(rootPath: String, dbPath: Option[String]) = {
-    val dbm = new SensingDBManager(dbPath match {
-      case Some(name) => name
-      case None       => "sensing.db"
-    })
+    val dbm = new SensingDBManager(dbPath.getOrElse("sensing.db"))
 
     val files = FileSelector.select(new File(rootPath), logFilenamePattern)
     files.par.foreach { file =>

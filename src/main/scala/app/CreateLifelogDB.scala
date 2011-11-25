@@ -34,10 +34,7 @@ object CreateLifelogDB {
   val imageFilenamePattern = """\.jpg$|\.JPG$|\.png$|\.PNG$""".r
 
   def run(rootPath: String, dbPath: Option[String]) = {
-    val dbm = new LifelogDBManager(dbPath match {
-      case Some(name) => name
-      case None       => "lifelog.db"
-    })
+    val dbm = new LifelogDBManager(dbPath.getOrElse("lifelog.db"))
 
     val files = FileSelector.select(new File(rootPath), imageFilenamePattern)
     spawn {
