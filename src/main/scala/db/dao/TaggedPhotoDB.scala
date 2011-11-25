@@ -134,4 +134,24 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
       SimplePhoto.findByLocation(centerLat, centerLon, diff, offset, limit)
     }
   }
+
+  def findTagByPhotoDateTime(start: String, end: String): Seq[Tag] = {
+    withConnection { implicit connection =>
+      SQL(
+        "select tags.id, tags.photo_id, tags.address, tags.device_type from " + Tag.tableName + " inner join " + SimplePhoto.tableName + " on " + Tag.tableName + ".photo_id = " + SimplePhoto.tableName + ".id where {startTime} <= date_time and date_time <= {endTime} order by tags.id, date_time"
+      ).on(
+        'startTime -> start, 'endTime -> end
+      ).as(Tag.simple *)
+    }
+  }
+
+  def findTagByPhotoDateTime(start: String, end: String, offset: Int, limit: Int): Seq[Tag] = {
+    withConnection { implicit connection =>
+      SQL(
+        "select tags.id, tags.photo_id, tags.address, tags.device_type from " + Tag.tableName + " inner join " + SimplePhoto.tableName + " on " + Tag.tableName + ".photo_id = " + SimplePhoto.tableName + ".id where {startTime} <= date_time and date_time <= {endTime} order by tags.id, date_time limit {limit} offset {offset}"
+      ).on(
+        'startTime -> start, 'endTime -> end, 'limit -> limit, 'offset -> offset
+      ).as(Tag.simple *)
+    }
+  }
 }

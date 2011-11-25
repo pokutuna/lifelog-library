@@ -122,6 +122,23 @@ class TaggedPhotoDBSpec extends SpecHelper {
       val photos2 = db.findPhotoByLocation(30, 120, 5, offset = 2, limit = 2)
       photos2.map(_.filename).toList should be (List("name1", "name2"))
     }
+
+  }
+
+  describe("Join Table") {
+    it("should find tag by photo date time") {
+      insertPhotos()
+      insertTags()
+      val tags = db.findTagByPhotoDateTime("2011-11-25 00:00:00", "2011-11-25 00:01:00")
+      tags.map(_.address).toList should be (List("hoge", "fuga", "piyo"))
+    }
+
+    it("should find tag by photo date time with limit and offset") {
+      insertPhotos()
+      insertTags()
+      val tags = db.findTagByPhotoDateTime("2011-11-25 00:00:00", "2011-11-25 00:01:00", offset = 2, limit = 100)
+      tags.map(_.address).toList should be (List("piyo"))
+    }
   }
 
 }
