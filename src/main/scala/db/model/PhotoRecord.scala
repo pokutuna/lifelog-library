@@ -86,7 +86,7 @@ object PhotoRecord {
     ).as(simple *)
   }
 
-  def findByLocation(centerLat: Double , centerLon: Double, diff: Double)(implicit connection: Connection): Seq[PhotoRecord] = {
+  def findByLocation(centerLat: Double, centerLon: Double, diff: Double)(implicit connection: Connection): Seq[PhotoRecord] = {
     SQL(
       "select * from " + tableName + " where {minLat} <= latitude and latitude <= {maxLat} and {minLon} <= longitude and longitude <= {maxLon} order by org_date"
     ).on(

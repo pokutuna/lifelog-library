@@ -32,11 +32,26 @@ object Tag {
   }
 
   def find(tag: Tag)(implicit connection: Connection): Option[Tag] = {
+    tag.id match {
+      case Id(_)       => findWithId(tag)
+      case NotAssigned => findIgnoreId(tag)
+    }
+  }
+
+  def findWithId(tag: Tag)(implicit connection: Connection): Option[Tag] = {
     SQL(
       "select * from " + tableName + " where id = {id} and photo_id = {photoId} and address = {address} and device_type = {deviceType} limit 1"
     ).on(
       'id -> tag.id, 'photoId -> tag.photoId, 'address -> tag.address,
       'deviceType -> tag.deviceType
+    ).as(simple ?)
+  }
+
+  def findIgnoreId(tag: Tag)(implicit connection: Connection): Option[Tag] = {
+    SQL(
+      "select * from " + tableName + " where photo_id = {photoId} and address = {address} and device_type = {deviceType} limit 1"
+    ).on(
+      'photoId -> tag.photoId, 'address -> tag.address, 'deviceType -> tag.deviceType
     ).as(simple ?)
   }
 

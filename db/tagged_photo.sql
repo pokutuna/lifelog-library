@@ -3,7 +3,7 @@ CREATE TABLE simple_photos (
   id integer PRIMARY KEY AUTOINCREMENT,
   directory text,
   filename text,
-  org_date text,
+  date_time text,
   latitude real,
   longitude real
 );
@@ -12,7 +12,7 @@ CREATE INDEX photo_directory_filename on simple_photos(directory, filename);
 DROP INDEX IF EXISTS photo_gps;
 CREATE INDEX photo_gps on simple_photos(latitude, longitude);
 DROP INDEX IF EXISTS photo_org_date;
-CREATE INDEX photo_org_date on simple_photos(org_date);
+CREATE INDEX photo_org_date on simple_photos(date_time);
 
 
 DROP TABLE IF EXISTS tags;
