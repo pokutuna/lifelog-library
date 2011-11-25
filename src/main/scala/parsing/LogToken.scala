@@ -1,5 +1,6 @@
 package com.pokutuna.lifelog.parsing
 
+import com.pokutuna.lifelog.db.model._
 import java.util.Date
 import com.pokutuna.lifelog.parsing.Transformer._
 

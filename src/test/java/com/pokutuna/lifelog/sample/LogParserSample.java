@@ -58,7 +58,7 @@ public class LogParserSample {
       for(LogLine l : logs) {
         if(l instanceof DetectLog) {
           DetectLog dl = (DetectLog)l;
-          System.out.println(dl + " -> " + dl.toDeviceRecord() + " : " + dl.toDetectRecord());
+          System.out.println(dl + " -> " + dl.toDeviceRecord() + " : " + dl.toDetectRecord(0));
         }
       } // #=>
       /* BtDetectLog(Sun Oct 10 00:00:41 JST 2010,Kono_Pocket_PC,00:22:64:CD:9E:94) -> BtDevice(00:22:64:CD:9E:94,Kono_Pocket_PC) : BtDetected(00:22:64:CD:9E:94,2010-10-10 00:00:41)

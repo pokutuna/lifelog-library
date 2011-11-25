@@ -2,7 +2,6 @@ package com.pokutuna.lifelog.sample;
 
 import com.pokutuna.lifelog.db.dao.*;
 import com.pokutuna.lifelog.db.model.*;
-import com.pokutuna.lifelog.db.model.LifelogModel.*;
 import java.util.List;
 
 public class DAOSample {
@@ -53,7 +52,7 @@ public class DAOSample {
     //他にdaoj.insert*等のデータベースへ追加するメソッドもありますが割愛します。
 
     //lifelog.dbを扱うLifelogDAOもある
-    LifelogDAOForJava lldao = new LifelogDAOForJava("jdbc:sqlite:Lifelog_110606.db"); //SensingDAOForJavaと同様
+    LifelogDBForJava lldao = new LifelogDBForJava("Lifelog_110606.db"); //SensingDAOForJavaと同様
 
     List<PhotoRecord> photos = lldao.photoTakenIn("2010-06-01 12:00:00", "2010-06-02 12:00:00");
     //期間内に撮影されたPhotoRecordオブジェクトのリストをphotosに代入
@@ -83,7 +82,7 @@ public class DAOSample {
     second: int
     */
 
-    lldao.photoTakenWhere(35.0, 36.0, 134.0, 135.0); //撮影された緯度経度が範囲内にあるPhotoRecordオブジェクトのリストを返す
+    lldao.photoTakenWhere(35.0, 134.0, 0.5); //撮影された緯度経度が範囲内にあるPhotoRecordオブジェクトのリストを返す
     lldao.existsFile("IMG_1325.JPG"); //与えられたfilenameを持つPhotoRecordがDB内にあればtrue
     lldao.existsFile("~/Picture", "IMG_1325.JPG"); //与え要られたdirectory、filenameを持つPhotoRecordがDBにあればtrue
 

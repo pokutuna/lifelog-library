@@ -12,25 +12,31 @@ object Transformer {
 
   trait ToBtDevice extends ToDeviceRecord {
     self: HasAddress with HasDeviceName =>
-    def toDeviceRecord: DeviceRecord = BtDevice(address, deviceName)
+    override def toDeviceRecord: BtDevice = BtDevice(address, deviceName)
   }
 
   trait ToWifiDevice extends ToDeviceRecord {
     self: HasAddress with HasDeviceName =>
-    def toDeviceRecord: DeviceRecord = WifiDevice(address, deviceName)
+    override def toDeviceRecord: WifiDevice = WifiDevice(address, deviceName)
   }
 
   trait ToDetectRecord {
-    def toDetectRecord: DetectedRecord
+    def toDetectRecord(fileId: Int): DetectedRecord
   }
 
   trait ToBtDetected extends ToDetectRecord {
     self: HasAddress with HasDate =>
-    def toDetectRecord: DetectedRecord = BtDetected(address, TimeUtil.format(dateTime), 0)
+
+    override def toDetectRecord(fileId: Int): BtDetected = {
+      BtDetected(address, TimeUtil.format(dateTime), fileId)
+    }
   }
 
   trait ToWifiDetected extends ToDetectRecord with HasSignal {
     self: HasAddress with HasDate =>
-    def toDetectRecord: DetectedRecord = WifiDetected(address, TimeUtil.format(dateTime), signal, 0)
+
+    override def toDetectRecord(fileId: Int): WifiDetected = {
+      WifiDetected(address, TimeUtil.format(dateTime), signal, fileId)
+    }
   }
 }
