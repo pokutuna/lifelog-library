@@ -20,7 +20,11 @@ case class PhotoRecord(
   minute: Int,
   second: Int,
   comment: String
-)
+) {
+  def toSimplePhoto: SimplePhoto = {
+    new SimplePhoto(directory, filename, orgDate, latitude, longitude)
+  }
+}
 
 object PhotoRecord {
 

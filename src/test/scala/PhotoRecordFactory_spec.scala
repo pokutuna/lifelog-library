@@ -1,5 +1,6 @@
 package com.pokutuna.lifelog.test
 
+import com.pokutuna.lifelog.db.model._
 import com.pokutuna.lifelog.db.util.PhotoRecordFactory
 import java.io.File
 
@@ -69,6 +70,20 @@ class PhotoRecordFactorySpec extends SpecHelper {
     val notExistFile = new File("src/test/resources/non-exist-file")
     it("should create PhotoRecord from a file is not exist") {
       evaluating { PhotoRecordFactory(notExistFile) } should produce [javax.imageio.IIOException]
+    }
+  }
+
+  describe("PhotoRecord transform to SimplePhoto") {
+    val tanuPhoto = new File("src/test/resources/tanu.jpg")
+    it("should create PhotoRecord from File") {
+      val record = PhotoRecordFactory(tanuPhoto).toSimplePhoto
+      val sphoto = new SimplePhoto("src/test/resources", "tanu.jpg", "2011-05-18 23:08:11", 34.82, 135.31)
+
+      record.directory should be (sphoto.directory)
+      record.filename should be (sphoto.filename)
+      record.dateTime should be (sphoto.dateTime)
+      record.latitude should be (sphoto.latitude plusOrMinus 0.1)
+      record.longitude should be (sphoto.longitude plusOrMinus 0.1)
     }
   }
 }
