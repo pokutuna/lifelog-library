@@ -84,6 +84,11 @@ class TaggedPhotoDBSpec extends SpecHelper {
       db.findPhoto(idPhoto) should be (Some(idPhoto))
     }
 
+    it("should return id after inserting") {
+      db.insertPhoto(photo1) should be (1)
+      db.insertPhoto(photo2) should be (2)
+    }
+
     it("should insert photos") {
       db.insertPhoto(List(photo1, photo2, photo3))
       db.findPhoto(photo1) should be (Some(photo1.copy(id = Id(1))))
@@ -121,6 +126,14 @@ class TaggedPhotoDBSpec extends SpecHelper {
       photos.map(_.dateTime).toList should be (List("2011-11-25 00:00:00", "2011-11-25 00:01:00"))
       val photos2 = db.findPhotoByLocation(30, 120, 5, offset = 2, limit = 2)
       photos2.map(_.filename).toList should be (List("name1", "name2"))
+    }
+
+    it("should take photo simply") {
+      insertPhotos()
+      val photos = db.photo(2, 1)
+      photos.map(_.dateTime).toList should be (List("2011-11-25 00:02:00"))
+      val photos2 = db.photo(3, 2)
+      photos2.map(_.dateTime).toList should be (List("2011-11-26 00:03:00", "2011-11-26 00:04:00"))
     }
 
   }

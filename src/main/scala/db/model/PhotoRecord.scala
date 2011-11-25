@@ -99,4 +99,10 @@ object PhotoRecord {
     ).as(simple *)
   }
 
+  def take(offset: Int, limit: Int)(implicit connection: Connection): Seq[PhotoRecord] = {
+    SQL(
+      "select * from " + tableName + " order by org_date limit {limit} offset {offset}"
+    ).on('limit -> limit, 'offset -> offset).as(simple *)
+  }
+
 }

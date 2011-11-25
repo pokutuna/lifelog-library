@@ -9,6 +9,12 @@ class LifelogDB(path: String) extends Database(path) with Schema {
 
   val schemaFile = new File("db/lifelog.sql")
 
+  def photo(offset: Int, limit: Int) = {
+    withConnection { implicit connection =>
+      PhotoRecord.take(offset, limit)
+    }
+  }
+
   def photoTakenIn(start: String, end: String): Seq[PhotoRecord] = {
     withConnection { implicit connection =>
       PhotoRecord.findByOrgDate(start, end)

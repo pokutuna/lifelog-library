@@ -42,6 +42,13 @@ object SimplePhoto {
     ).executeUpdate()
   }
 
+  def take(offset: Int, limit: Int)(implicit connection: Connection): Seq[SimplePhoto] = {
+    SQL(
+      "select * from " + tableName + " order by date_time limit {limit} offset {offset}"
+    ).on('limit -> limit, 'offset -> offset).as(simple *)
+  }
+
+
   def find(photo: SimplePhoto)(implicit connection: Connection): Option[SimplePhoto] = {
     photo.id match {
       case Id(_)       => findWithId(photo)

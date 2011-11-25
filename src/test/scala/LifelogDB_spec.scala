@@ -80,6 +80,7 @@ class LifelogDBSpec extends SpecHelper {
       db.insertPhoto(photo)
       db.photoTakenIn("hogedate", "hogedate").toList should be (List(photo, photo))
     }
+
   }
 
   describe("Paging Drop & Take") {
@@ -88,6 +89,12 @@ class LifelogDBSpec extends SpecHelper {
       a.toList should be (List(photo3))
       val b = db.photoTakenIn("2011-07-07 00:00:00", "2011-07-08 00:00:00", 10, 1)
       b.toList should be (List())
+    }
+
+    it("should take photos simply") {
+      db.photo(offset = 1, limit = 2).toList should be (List(photo2, photo3))
+      db.photo(offset = 3, limit = 100).toList should be (List(photo4))
+      db.photo(offset = 100, limit = 100).toList should be (List())
     }
   }
 

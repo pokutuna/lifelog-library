@@ -63,15 +63,22 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
     }
   }
 
-  def insertPhoto(photo: SimplePhoto) = {
+  def insertPhoto(photo: SimplePhoto): Int = {
     withConnection { implicit connection =>
       SimplePhoto.insert(photo)
+      SimplePhoto.find(photo).get.id.get
     }
   }
 
   def insertPhoto(photos: Seq[SimplePhoto]) = {
     withTransaction { implicit connection =>
       for(photo <- photos) { SimplePhoto.insert(photo) }
+    }
+  }
+
+  def photo(offset: Int, limit: Int): Seq[SimplePhoto] = {
+    withConnection { implicit connection =>
+      SimplePhoto.take(offset, limit)
     }
   }
 
