@@ -1,17 +1,49 @@
 package com.pokutuna.lifelog.app
 
-import com.pokutuna.lifelog.db.dao._
+import com.pokutuna.lifelog.db._
 import com.pokutuna.lifelog.db.model._
+import com.pokutuna.lifelog.db.util._
+import com.pokutuna.lifelog.db.dao._
 import com.pokutuna.lifelog.util._
+import scala.concurrent.ops._
 import java.io.File
 
 object CreateLifelogDB {
 
-  val defaultDbFile = "lifelog.db"
+  class LifelogDBManager(path: String) {
+    val db = new LifelogDB(path)
+    db.applySchema()
+
+    var size: Int = 0
+    var photos: List[PhotoRecord] = List()
+
+    def addPhoto(photo: PhotoRecord) = synchronized {
+      size += 1
+      photos = photo :: photos
+      if (100 <= size) insert()
+    }
+
+    def insert() = synchronized {
+      println("start insert")
+      db.insertPhoto(photos)
+      size = 0
+      photos = List()
+    }
+  }
+
   val imageFilenamePattern = """\.jpg$|\.JPG$|\.png$|\.PNG$""".r
 
   def run(rootPath: String, dbPath: Option[String]) = {
-    FileSelector.select(new File(rootPath), imageFilenamePattern).foreach(println)
+    val dbm = new LifelogDBManager(dbPath match {
+      case Some(name) => name
+      case None       => "lifelog.db"
+    })
+
+    val files = FileSelector.select(new File(rootPath), imageFilenamePattern)
+    spawn {
+      files.par.foreach(f => dbm.addPhoto(PhotoRecordFactory(f)))
+      dbm.insert()
+    }
   }
 
   def main(args: Array[String]) = {
