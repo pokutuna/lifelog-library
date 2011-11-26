@@ -1,6 +1,6 @@
 name := "lifelog-library"
 
-version := "0.2.2-beta"
+version := "0.3"
 
 organization := "com.pokutuna"
 
@@ -9,9 +9,7 @@ scalaVersion := "2.9.1"
 libraryDependencies ++= Seq(
   "org.scalatest" % "scalatest_2.9.0" % "1.6.1",
   "org.scalaquery" % "scalaquery_2.9.0-1" % "0.9.5",
-  "org.sqlite" % "sqlitejdbc" % "v056" from "http://files.zentus.com/sqlitejdbc/sqlitejdbc-v056.jar",
-  "com.github.scala-incubator.io" %% "scala-io-core" % "0.2.0",
-  "com.github.scala-incubator.io" %% "scala-io-file" % "0.2.0"
+  "org.sqlite" % "sqlitejdbc" % "v056" from "http://files.zentus.com/sqlitejdbc/sqlitejdbc-v056.jar"
 )
 
 javacOptions ++= Seq("-encoding", "utf8")
