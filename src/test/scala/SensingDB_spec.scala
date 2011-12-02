@@ -114,6 +114,10 @@ class SensingDBSpec extends SpecHelper {
     it("should get latest detection date") {
       db.latestDateTime should be ("2012-07-07 00:00:00")
     }
+
+    it("should get oldest detection date") {
+      db.oldestDateTime should be ("2000-07-07 00:03:00")
+    }
   }
 
   describe("Insersion") {

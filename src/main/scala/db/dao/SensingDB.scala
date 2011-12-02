@@ -183,6 +183,13 @@ class SensingDB(path: String) extends Database(path) with Schema {
     if (latests._1 >= latests._2) latests._1 else latests._2
   }
 
+  def oldestDateTime: String = {
+    val oldests = withConnection { implicit connection =>
+      (BtDetected.oldestDateTime, WifiDetected.oldestDateTime)
+    }
+    if (oldests._1 <= oldests._2) oldests._1 else oldests._2
+  }
+
   def insertRegisteredFile(file: RegisteredFile): Int = {
     withTransaction { implicit connection =>
       RegisteredFile.insert(file)

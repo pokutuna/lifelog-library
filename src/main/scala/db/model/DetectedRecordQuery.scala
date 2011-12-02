@@ -73,7 +73,13 @@ trait DetectedRecordQuery[T <: DetectedRecord] {
   def latestDateTime(implicit connection: Connection): String = {
     SQL(
       "select date_time from " + tableName + " order by date_time desc limit 1"
-    ).on('table -> tableName).as(get[String]("date_time"))
+    ).as(get[String]("date_time"))
+  }
+
+  def oldestDateTime(implicit connection: Connection): String = {
+    SQL(
+      "select date_time from " + tableName + " order by date_time asc limit 1"
+    ).as(get[String]("date_time"))
   }
 
   def detele(detected: T)(implicit connection: Connection) = {
