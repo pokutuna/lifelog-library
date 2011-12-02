@@ -55,6 +55,12 @@ object Tag {
     ).as(simple ?)
   }
 
+  def findById(id: Int)(implicit connection: Connection): Option[Tag] = {
+    SQL(
+      "select * from " + tableName + " where id = {id} limit 1"
+    ).on('id -> id).as(simple ?)
+  }
+
   def findByAddress(address: String)(implicit connection: Connection): Seq[Tag] = {
     SQL(
       "select * from " + tableName + " where address = {address} order by photo_id"
