@@ -27,6 +27,12 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
     }
   }
 
+  def findTagById(id: Int): Option[Tag] = {
+    withConnection { implicit connection =>
+      Tag.findById(id)
+    }
+  }
+
   def findTagByAddress(address: String): Seq[Tag] = {
     withConnection { implicit connection =>
       Tag.findByAddress(address)

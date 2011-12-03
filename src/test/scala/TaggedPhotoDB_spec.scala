@@ -74,6 +74,14 @@ class TaggedPhotoDBSpec extends SpecHelper {
       db.countTagByAddress("hoge") should be (1)
       db.countTagByAddress("1000000") should be (0)
     }
+
+    it("should find tag by id") {
+      insertTags()
+      db.findTagById(3) should be (Some(tag3.copy(id = Id(3))))
+      db.findTagById(1) should be (Some(tag1.copy(id = Id(1))))
+      db.findTagById(-1) should be (None)
+    }
+
   }
 
   describe("SimplePhoto") {
