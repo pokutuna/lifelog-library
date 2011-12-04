@@ -46,6 +46,10 @@ class SensingDB(path: String) extends Database(path) with Schema {
     (btSearchDatePrefix(datePrefix) ++ wifiSearchDatePrefix(datePrefix)).sortBy(_.dateTime)
   }
 
+  def searchDatePrefixFilterAddress(datePrefix: String, address: String): Seq[DetectedRecord]  = {
+    (btSearchDatePrefixFilterAddress(datePrefix, address) ++ wifiSearchDatePrefixFilterAddress(datePrefix, address)).sortBy(_.dateTime)
+  }
+
   def btSearchDatePrefix(datePrefix: String): Seq[BtDetected] = {
     withConnection { implicit connection =>
       BtDetected.searchDatePrefix(datePrefix)
@@ -58,6 +62,12 @@ class SensingDB(path: String) extends Database(path) with Schema {
     }
   }
 
+  def btSearchDatePrefixFilterAddress(datePrefix: String, address: String): Seq[BtDetected] = {
+    withConnection { implicit connection =>
+      BtDetected.searchDatePrefixFilterAddress(datePrefix, address)
+    }
+  }
+
   def wifiSearchDatePrefix(datePrefix: String): Seq[WifiDetected] = {
     withConnection { implicit connection =>
       WifiDetected.searchDatePrefix(datePrefix)
@@ -67,6 +77,12 @@ class SensingDB(path: String) extends Database(path) with Schema {
   def wifiSearchDatePrefix(datePrefix: String, offset: Int, limit: Int): Seq[WifiDetected] = {
     withConnection { implicit connection =>
       WifiDetected.searchDatePrefix(datePrefix, offset, limit)
+    }
+  }
+
+  def wifiSearchDatePrefixFilterAddress(datePrefix: String, address: String): Seq[WifiDetected] = {
+    withConnection { implicit connection =>
+      WifiDetected.searchDatePrefixFilterAddress(datePrefix, address)
     }
   }
 
