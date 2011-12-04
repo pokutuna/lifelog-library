@@ -44,9 +44,14 @@ object CreateTaggedPhotoDB {
       @tailrec
       def insertTagsRec(sensing: SensingDB, offset: Int, limit: Int): Unit = {
         println("inserting tags: " + offset)
-        val tags = db.photo(offset, limit).flatMap(createTag(_, sensing))
-        db.insertTag(tags)
-        if (tags.isEmpty) return else insertTagsRec(sensing, offset + limit, limit)
+        val photos = db.photo(offset, limit)
+        if (photos.isEmpty)
+          return
+        else {
+          val tags = photos.flatMap(createTag(_, sensing))
+          db.insertTag(tags)
+          insertTagsRec(sensing, offset + limit, limit)
+        }
       }
       insertTagsRec(sensing, 0, 1000)
     }
