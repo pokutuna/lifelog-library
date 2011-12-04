@@ -144,6 +144,20 @@ class TaggedPhotoDBSpec extends SpecHelper {
       photos2.map(_.dateTime).toList should be (List("2011-11-26 00:03:00", "2011-11-26 00:04:00"))
     }
 
+    it("should get latest date") {
+      insertPhotos()
+      val latest = db.latestDate
+      latest should be ("2011-11-26 00:04:00")
+    }
+
+    it("should get oldest date") {
+      insertPhotos()
+      val oldest = db.oldestDate
+      oldest should be ("2011-11-25 00:00:00")
+    }
+
+
+
   }
 
   describe("Join Table") {

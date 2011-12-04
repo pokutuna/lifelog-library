@@ -167,4 +167,16 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
       ).as(Tag.simple *)
     }
   }
+
+  def latestDate: String = {
+    withConnection { implicit connection =>
+      SimplePhoto.latestDate
+    }
+  }
+
+  def oldestDate: String = {
+    withConnection { implicit connection =>
+      SimplePhoto.oldestDate
+    }
+  }
 }

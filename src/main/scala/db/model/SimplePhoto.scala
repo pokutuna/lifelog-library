@@ -136,4 +136,16 @@ object SimplePhoto {
       'limit -> limit, 'offset -> offset
     ).as(simple *)
   }
+
+  def latestDate(implicit connection: Connection): String = {
+    SQL(
+      "select date_time from " + tableName + " order by date_time desc limit 1"
+    ).as(get[String]("date_time"))
+  }
+
+  def oldestDate(implicit connection: Connection): String = {
+    SQL(
+      "select date_time from " + tableName + " order by date_time asc limit 1"
+    ).as(get[String]("date_time"))
+  }
 }
