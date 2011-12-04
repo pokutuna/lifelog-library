@@ -1,6 +1,6 @@
 name := "lifelog-library"
 
-version := "0.3"
+version := "0.3.1"
 
 organization := "com.pokutuna"
 

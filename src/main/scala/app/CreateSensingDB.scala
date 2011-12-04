@@ -53,7 +53,8 @@ object CreateSensingDB {
     val dbm = new SensingDBManager(dbPath.getOrElse("sensing.db"))
 
     val files = FileSelector.select(new File(rootPath), logFilenamePattern)
-    files.par.foreach { file =>
+    // files.par.foreach { file =>
+    files.foreach { file =>
       println("parsing: " + file.getName)
       try {
         val parsed = filterDetectLog(LogParser.run(new FileReader(file)).get)
