@@ -28,7 +28,7 @@ case class PhotoRecord(
 
 object PhotoRecord {
 
-  val tableName = "photo"
+  val tableName = "photo_table"
 
   def simple = {
     get[String]("directory") ~/

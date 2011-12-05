@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS photo;
-CREATE TABLE photo (
+DROP TABLE IF EXISTS photo_table;
+CREATE TABLE photo_table (
   directory text,
   filename text,
   org_date text,
@@ -17,13 +17,13 @@ CREATE TABLE photo (
   comment text
 );
 DROP INDEX IF EXISTS photo_directory_filename;
-CREATE INDEX photo_directory_filename on photo(directory, filename);
+CREATE INDEX photo_directory_filename on photo_table(directory, filename);
 DROP INDEX IF EXISTS photo_gps;
-CREATE INDEX photo_gps on photo(latitude, longitude);
+CREATE INDEX photo_gps on photo_table(latitude, longitude);
 DROP INDEX IF EXISTS photo_org_date;
-CREATE INDEX photo_org_date on photo(org_date);
+CREATE INDEX photo_org_date on photo_table(org_date);
 DROP INDEX IF EXISTS photo_ymdhms;
-CREATE INDEX photo_ymdhms on photo(year, month, day, hour, minute, second);
+CREATE INDEX photo_ymdhms on photo_table(year, month, day, hour, minute, second);
 
 -- * original photo table *
 -- CREATE TABLE photo (
