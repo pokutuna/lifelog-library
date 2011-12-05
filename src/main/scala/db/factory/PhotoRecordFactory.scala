@@ -1,4 +1,4 @@
-package com.pokutuna.lifelog.db.util
+package com.pokutuna.lifelog.db.factory
 
 import com.pokutuna.lifelog.db.model.PhotoRecord
 import com.pokutuna.lifelog.util.{DateTime, ExifExtractor}
