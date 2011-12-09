@@ -1,13 +1,13 @@
 package com.pokutuna.lifelog.db.dao
 
 import com.pokutuna.lifelog.db.model._
-import java.io.File
+import com.pokutuna.lifelog.util._
 import anorm._
 import anorm.SqlParser._
 
 class SensingDB(path: String) extends Database(path) with Schema {
 
-  val schemaFile = new File("db/sensing.sql")
+  val schemaUrl = Resource.getUrl("/db/sensing.sql")
 
   def detectedIn(start: String, end:String): Seq[DetectedRecord] = {
     (btDetectedIn(start, end) ++ wifiDetectedIn(start, end)).sortBy(_.dateTime)

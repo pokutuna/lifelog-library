@@ -1,13 +1,13 @@
 package com.pokutuna.lifelog.db.dao
 
 import com.pokutuna.lifelog.db.model._
-import java.io.File
+import com.pokutuna.lifelog.util._
 import anorm._
 import anorm.SqlParser._
 
 class LifelogDB(path: String) extends Database(path) with Schema {
 
-  val schemaFile = new File("db/lifelog.sql")
+  val schemaUrl = Resource.getUrl("/db/lifelog.sql")
 
   def photo(offset: Int, limit: Int) = {
     withConnection { implicit connection =>

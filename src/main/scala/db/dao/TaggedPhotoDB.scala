@@ -1,13 +1,13 @@
 package com.pokutuna.lifelog.db.dao
 
 import com.pokutuna.lifelog.db.model._
-import java.io.File
+import com.pokutuna.lifelog.util._
 import anorm._
 import anorm.SqlParser._
 
 class TaggedPhotoDB(path: String) extends Database(path) with Schema {
 
-  val schemaFile = new File("db/tagged_photo.sql")
+  val schemaUrl = Resource.getUrl("/db/tagged_photo.sql")
 
   def insertTag(tag: Tag) = {
     withConnection { implicit connection =>

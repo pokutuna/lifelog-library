@@ -1,16 +1,16 @@
 package com.pokutuna.lifelog.db.dao
 
 import anorm._
-import java.io.File
+import java.net.URL
 import scala.io.Source
 
 trait Schema {
   self: Database =>
 
-  val schemaFile: File
+  val schemaUrl: URL
 
   def readSchema: String = {
-    Source.fromFile(schemaFile).mkString
+    Source.fromURL(schemaUrl).mkString
   }
 
   def schemaStatements: Seq[String] = {
