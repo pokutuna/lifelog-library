@@ -7,7 +7,7 @@ import anorm.SqlParser._
 
 class LifelogDB(path: String) extends Database(path) with Schema {
 
-  val schemaUrl = Resource.getUrl("/db/lifelog.sql")
+  val schemaUrl = Resource.getUrl("db/lifelog.sql")
 
   def photo(offset: Int, limit: Int) = {
     withConnection { implicit connection =>

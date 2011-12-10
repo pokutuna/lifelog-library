@@ -7,7 +7,7 @@ import anorm.SqlParser._
 
 class SensingDB(path: String) extends Database(path) with Schema {
 
-  val schemaUrl = Resource.getUrl("/db/sensing.sql")
+  val schemaUrl = Resource.getUrl("db/sensing.sql")
 
   def detectedIn(start: String, end:String): Seq[DetectedRecord] = {
     (btDetectedIn(start, end) ++ wifiDetectedIn(start, end)).sortBy(_.dateTime)

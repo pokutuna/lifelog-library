@@ -7,7 +7,7 @@ import anorm.SqlParser._
 
 class TaggedPhotoDB(path: String) extends Database(path) with Schema {
 
-  val schemaUrl = Resource.getUrl("/db/tagged_photo.sql")
+  val schemaUrl = Resource.getUrl("db/tagged_photo.sql")
 
   def insertTag(tag: Tag) = {
     withConnection { implicit connection =>
