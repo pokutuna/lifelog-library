@@ -5,6 +5,7 @@ import anorm.SqlParser._
 import java.sql._
 
 case class PhotoRecord(
+  id: Pk[Int],
   directory: String,
   filename: String,
   orgDate: String,
@@ -21,6 +22,10 @@ case class PhotoRecord(
   second: Int,
   comment: String
 ) {
+  def this(directory: String, filename: String, orgDate: String, latitude: Double, longitude: Double, width: Int, height: Int, fileSize: Int, year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int, comment: String) = {
+    this(NotAssigned, directory, filename, orgDate, latitude, longitude, width, height, fileSize, year, month, day, hour, minute, second, comment)
+  }
+
   def toSimplePhoto: SimplePhoto = {
     new SimplePhoto(directory, filename, orgDate, latitude, longitude)
   }
@@ -31,6 +36,7 @@ object PhotoRecord {
   val tableName = "photo_table"
 
   def simple = {
+    get[Pk[Int]]("id") ~/
     get[String]("directory") ~/
     get[String]("filename") ~/
     get[String]("org_date") ~/
@@ -46,8 +52,8 @@ object PhotoRecord {
     get[Int]("minute") ~/
     get[Int]("second") ~/
     get[String]("comment") ^^ {
-      case directory~fielname~orgDate~latitude~longitude~width~height~fileSize~year~month~day~hour~minute~second~comment =>
-        PhotoRecord(directory, fielname, orgDate, latitude, longitude, width, height, fileSize, year, month, day, hour, minute, second, comment)
+      case id~directory~fielname~orgDate~latitude~longitude~width~height~fileSize~year~month~day~hour~minute~second~comment =>
+        PhotoRecord(id, directory, fielname, orgDate, latitude, longitude, width, height, fileSize, year, month, day, hour, minute, second, comment)
     }
   }
 
@@ -62,6 +68,12 @@ object PhotoRecord {
       'second -> photo.second, 'comment -> photo.comment
     ).executeUpdate()
     return photo
+  }
+
+  def findById(id: Int)(implicit connection: Connection): Option[PhotoRecord] = {
+    SQL(
+      "select * from " + tableName + " where id = {id} limit 1"
+    ).on('id -> id).as(simple ? )
   }
 
   def findByName(filename: String)(implicit connection: Connection): Seq[PhotoRecord] = {

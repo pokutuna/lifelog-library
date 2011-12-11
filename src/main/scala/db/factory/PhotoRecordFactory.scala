@@ -23,7 +23,7 @@ object PhotoRecordFactory {
       case None => None
     }
 
-    PhotoRecord(
+    new PhotoRecord(
       directory,
       file.getName(),
       date.map(_.asString).getOrElse(""),

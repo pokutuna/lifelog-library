@@ -2,15 +2,17 @@ package com.pokutuna.lifelog.test
 
 import com.pokutuna.lifelog.db.dao._
 import com.pokutuna.lifelog.db.model._
+import anorm._
+import anorm.SqlParser._
 
 class LifelogDBSpec extends SpecHelper {
 
   val db = new LifelogDB("src/test/resources/test_lifelog.db")
 
-  val photo1 = PhotoRecord("dir1", "fn1", "2011-07-07 00:00:00", 35.0, 135.0, 10, 10, 10, 2011, 7, 7, 0, 0, 0, "hoge1")
-  val photo2 = PhotoRecord("dir2", "fn2", "2011-07-07 00:01:00", 36.0, 136.0, 10, 10, 10, 2011, 7, 7, 0, 1, 0, "hoge2")
-  val photo3 = PhotoRecord("dir3", "fn3", "2011-07-07 00:02:00", 36.5, 135.0, 10, 10, 10, 2011, 7, 7, 0, 2, 0, "hoge3")
-  val photo4 = PhotoRecord("dir4", "fn3", "2011-07-07 00:03:00", 34.5, 134.5, 10, 10, 10, 2011, 7, 7, 0, 3, 0, "hoge4")
+  val photo1 = PhotoRecord(Id(1), "dir1", "fn1", "2011-07-07 00:00:00", 35.0, 135.0, 10, 10, 10, 2011, 7, 7, 0, 0, 0, "hoge1")
+  val photo2 = PhotoRecord(Id(2), "dir2", "fn2", "2011-07-07 00:01:00", 36.0, 136.0, 10, 10, 10, 2011, 7, 7, 0, 1, 0, "hoge2")
+  val photo3 = PhotoRecord(Id(3), "dir3", "fn3", "2011-07-07 00:02:00", 36.5, 135.0, 10, 10, 10, 2011, 7, 7, 0, 2, 0, "hoge3")
+  val photo4 = PhotoRecord(Id(4), "dir4", "fn3", "2011-07-07 00:03:00", 34.5, 134.5, 10, 10, 10, 2011, 7, 7, 0, 3, 0, "hoge4")
 
   def cleanDB = {
     import scala.util.control.Exception._
@@ -36,6 +38,14 @@ class LifelogDBSpec extends SpecHelper {
 
       val records3 = db.photoTakenIn("2011-07-08 00:00:00", "2011-07-07 00:00:00").toList
       records3 should be (Nil)
+    }
+  }
+
+  describe("Photo By Id") {
+    it("should get photo by id") {
+      db.photoById(3) should be (Some(photo3))
+      db.photoById(4) should be (Some(photo4))
+      db.photoById(5) should be (None)
     }
   }
 
@@ -73,12 +83,13 @@ class LifelogDBSpec extends SpecHelper {
 
   describe("Insert Photo Records") {
     it("should insert PhotoRecord") {
-      val photo = PhotoRecord("dir5", "fn5", "hogedate", 35.0, 135.0, 10, 10, 10, 2011, 7, 7, 0, 0, 0, "fuga")
+      val photo = new PhotoRecord("dir5", "fn5", "hogedate", 35.0, 135.0, 10, 10, 10, 2011, 7, 7, 0, 0, 0, "fuga")
       db.insertPhoto(photo)
       db.existsFile("dir5", "fn5") should be (true)
 
       db.insertPhoto(photo)
-      db.photoTakenIn("hogedate", "hogedate").toList should be (List(photo, photo))
+      val list = db.photoTakenIn("hogedate", "hogedate").toList
+      list should be (List(photo.copy(id = Id(5)), photo.copy(id = Id(6))))
     }
 
   }

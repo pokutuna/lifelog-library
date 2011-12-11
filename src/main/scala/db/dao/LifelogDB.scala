@@ -33,6 +33,12 @@ class LifelogDB(path: String) extends Database(path) with Schema {
     }
   }
 
+  def photoById(id: Int): Option[PhotoRecord] = {
+    withConnection { implicit connection =>
+      PhotoRecord.findById(id)
+    }
+  }
+
   def photoByName(filename: String): Seq[PhotoRecord] = {
     withConnection { implicit connection =>
       PhotoRecord.findByName(filename)

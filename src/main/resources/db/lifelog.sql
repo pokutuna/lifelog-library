@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS photo_table;
 CREATE TABLE photo_table (
+  id integer PRIMARY KEY,
   directory text,
   filename text,
   org_date text,
