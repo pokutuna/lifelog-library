@@ -11,17 +11,19 @@ object TimeUtil {
   val HOUR = MINUTE * 60
   val DAY = HOUR * 24
 
-  val sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+  def getDateFormat: SimpleDateFormat = {
+    return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+  }
 
   def parseAndFormat(str: String): String = format(parse(str))
 
-  def parse(str: String): Date = synchronized {
-    val d = sdf.parse(str)
+  def parse(str: String): Date = {
+    val d = getDateFormat.parse(str)
     new Date(d.getTime)
   }
 
-  def format(ts: Date): String = synchronized {
-    sdf.format(ts.getTime)
+  def format(ts: Date): String = {
+    getDateFormat.format(ts.getTime)
   }
 
   def dateToCalendar(ts: Date): Calendar = {
@@ -36,7 +38,7 @@ object TimeUtil {
   def month(ts: Date): Int =
     dateToCalendar(ts).get(Calendar.MONTH) + 1
 
-  def day(ts: Date): Int = 
+  def day(ts: Date): Int =
     dateToCalendar(ts).get(Calendar.DATE)
 
   def hour(ts: Date): Int =
@@ -65,17 +67,3 @@ object TimeUtil {
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
