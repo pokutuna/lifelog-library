@@ -63,11 +63,10 @@ class TaggedPhotoDBSpec extends SpecHelper {
     }
 
     it("should count tags by photo id") {
-      pending
-      // insertTags()
-      // db.countTagByPhotoId(1) should be (2)
-      // db.countTagByPhotoId(3) should be (1)
-      // db.countTagByPhotoId(-1) should be (0)
+      insertTags()
+      db.countTagByPhotoId(1) should be (2)
+      db.countTagByPhotoId(3) should be (1)
+      db.countTagByPhotoId(-1) should be (0)
     }
 
     it("should count tags by address") {

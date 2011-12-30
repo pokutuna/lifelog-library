@@ -77,4 +77,16 @@ object Tag {
     ).on('photoId -> photoId).as(simple *)
   }
 
+  def countByDeviceId(deviceId: Int)(implicit connection: Connection): Int = {
+    SQL(
+      "select count(*) from" + tableName + " where device_id = {deviceId}"
+    ).on('deviceId -> deviceId).as(get[Int]("count(*)"))
+  }
+
+  def countByPhotoId(photoId: Int)(implicit connection: Connection): Int = {
+    SQL(
+      "select count(*) from " + tableName + " where photo_id = {photoId}"
+    ).on('photoId -> photoId).as(get[Int]("count(*)"))
+  }
+
 }

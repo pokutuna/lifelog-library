@@ -65,11 +65,17 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
   // }
 
 
-  // def countTagByPhotoId(photoId: Int): Int = {
-  //   withConnection { implicit connection =>
-  //     Tag.countByPhotoId(photoId)
-  //   }
-  // }
+  def countTagByDeviceId(deviceId: Int): Int = {
+    withConnection { implicit connection =>
+      Tag.countByDeviceId(deviceId)
+    }
+  }
+
+  def countTagByPhotoId(photoId: Int): Int = {
+    withConnection { implicit connection =>
+      Tag.countByPhotoId(photoId)
+    }
+  }
 
   // def countTagByAddress(address: String): Int = {
   //   withConnection { implicit connection =>
