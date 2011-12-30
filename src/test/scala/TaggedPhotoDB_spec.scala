@@ -69,6 +69,13 @@ class TaggedPhotoDBSpec extends SpecHelper {
       db.countTagByPhotoId(-1) should be (0)
     }
 
+    it("should count tags by device id") {
+      insertTags()
+      db.countTagByDeviceId(1) should be (2)
+      db.countTagByDeviceId(3) should be (1)
+      db.countTagByDeviceId(-1) should be (0)
+    }
+
     it("should count tags by address") {
       pending
       // insertTags()

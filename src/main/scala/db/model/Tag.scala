@@ -79,7 +79,7 @@ object Tag {
 
   def countByDeviceId(deviceId: Int)(implicit connection: Connection): Int = {
     SQL(
-      "select count(*) from" + tableName + " where device_id = {deviceId}"
+      "select count(*) from " + tableName + " where device_id = {deviceId}"
     ).on('deviceId -> deviceId).as(get[Int]("count(*)"))
   }
 
