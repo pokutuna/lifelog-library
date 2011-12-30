@@ -9,9 +9,13 @@ class TaggedPhotoDBSpec extends SpecHelper {
 
   val tag1 = new Tag(1, 1)
   val tag2 = new Tag(2, 1)
-  val tag3 = new Tag(1, 2)
-  val tag4 = new Tag(2, 3)
+  val tag3 = new Tag(3, 2)
+  val tag4 = new Tag(3, 3)
   val tag5 = new Tag(3, 4)
+
+  val dev1 = new Device("hoge", "bt", "nomad1")
+  val dev2 = new Device("fuga", "bt", "nomad2")
+  val dev3 = new Device("piyo", "wf", "nomad3")
 
   val photo1 = new SimplePhoto("dir1", "name1", "2011-11-25 00:00:00", 30, 120)
   val photo2 = new SimplePhoto("dir1", "name2", "2011-11-25 00:01:00", 30, 120)
@@ -35,6 +39,10 @@ class TaggedPhotoDBSpec extends SpecHelper {
     db.insertPhoto(List(photo1, photo2, photo3, photo4, photo5))
   }
 
+  def insertDevices() = {
+    db.insertDevice(List(dev1, dev2, dev3))
+  }
+
   describe("Tag") {
 
     it("should insert Tag") {
@@ -50,15 +58,15 @@ class TaggedPhotoDBSpec extends SpecHelper {
     }
 
     it("should find by address") {
-      pending
-      // insertTags()
-      // db.findTagByAddress("piyo").map(_.photoId).toSet should be (Set(2, 3, 4))
-      // db.findTagByAddress("piyo", offset = 1, limit = 1).map(_.photoId) should be (List(3))
+      insertTags()
+      insertDevices()
+      db.findTagByAddress("piyo").map(_.photoId).toSet should be (Set(2, 3, 4))
+      db.findTagByAddress("piyo", offset = 1, limit = 1).map(_.photoId) should be (List(3))
     }
 
     it("should find by photo id") {
       insertTags()
-      db.findTagByPhotoId(2).map(_.deviceId).toList should be (List(1))
+      db.findTagByPhotoId(2).map(_.deviceId).toList should be (List(3))
       db.findTagByPhotoId(-1) should be (Seq())
     }
 
@@ -71,17 +79,17 @@ class TaggedPhotoDBSpec extends SpecHelper {
 
     it("should count tags by device id") {
       insertTags()
-      db.countTagByDeviceId(1) should be (2)
-      db.countTagByDeviceId(3) should be (1)
+      db.countTagByDeviceId(1) should be (1)
+      db.countTagByDeviceId(3) should be (3)
       db.countTagByDeviceId(-1) should be (0)
     }
 
     it("should count tags by address") {
-      pending
-      // insertTags()
-      // db.countTagByAddress("piyo") should be (3)
-      // db.countTagByAddress("hoge") should be (1)
-      // db.countTagByAddress("1000000") should be (0)
+      insertTags()
+      insertDevices()
+      db.countTagByAddress("piyo") should be (3)
+      db.countTagByAddress("hoge") should be (1)
+      db.countTagByAddress("1000000") should be (0)
     }
 
     it("should find tag by id") {
@@ -93,10 +101,43 @@ class TaggedPhotoDBSpec extends SpecHelper {
 
     it("should find tag by device id") {
       insertTags()
-      db.findTagByDeviceId(1).map(_.photoId).toList should be (List(1, 2))
-      db.findTagByDeviceId(2).map(_.photoId).toList should be (List(1, 3))
+      db.findTagByDeviceId(1).map(_.photoId).toList should be (List(1))
+      db.findTagByDeviceId(2).map(_.photoId).toList should be (List(1))
+      db.findTagByDeviceId(3).map(_.photoId).toList should be (List(2, 3, 4))
       db.findTagByDeviceId(-1).map(_.photoId).toList should be (List())
     }
+  }
+
+  describe("Device") {
+
+    it("should insert device") {
+      insertDevices()
+      db.insertDevice(new Device("temp_device", "temp_type", ""))
+    }
+
+    it("should find by id") {
+      insertDevices()
+      db.findDeviceById(1) should be (Some(dev1.copy(id = Id(1))))
+      db.findDeviceById(-1) should be (None)
+      db.findDeviceById(3) should be (Some(dev3.copy(id = Id(3))))
+    }
+
+    it("should find by address") {
+      insertDevices()
+      db.findDeviceByAddress("hoge") should be (Some(dev1.copy(id = Id(1))))
+      db.findDeviceByAddress("fuga") should be (Some(dev2.copy(id = Id(2))))
+      db.findDeviceByAddress("もげら") should be (None)
+    }
+
+    it("should check id when find device") {
+      insertDevices()
+      db.withConnection { implicit connection =>
+        Device.findIgnoreId(dev1.copy(id = Id(3))) should be (Some(dev1.copy(id = Id(1))))
+        Device.findWithId(dev1.copy(id = Id(3))) should be (None)
+        Device.findWithId(dev2.copy(id = Id(2))) should be (Some(dev2.copy(id = Id(2))))
+      }
+    }
+
   }
 
   describe("SimplePhoto") {
@@ -178,14 +219,14 @@ class TaggedPhotoDBSpec extends SpecHelper {
       insertPhotos()
       insertTags()
       val tags = db.findTagByPhotoDateTime("2011-11-25 00:00:00", "2011-11-25 00:01:00")
-      tags.map(_.deviceId).toList should be (List(1, 2, 1))
+      tags.map(_.deviceId).toList should be (List(1, 2, 3))
     }
 
     it("should find tag by photo date time with limit and offset") {
       insertPhotos()
       insertTags()
       val tags = db.findTagByPhotoDateTime("2011-11-25 00:00:00", "2011-11-25 00:01:00", offset = 2, limit = 100)
-      tags.map(_.deviceId).toList should be (List(1))
+      tags.map(_.deviceId).toList should be (List(3))
     }
   }
 

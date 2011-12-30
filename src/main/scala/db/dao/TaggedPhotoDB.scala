@@ -51,19 +51,23 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
     }
   }
 
+  def findTagByAddress(address: String): Seq[Tag] = {
+    withConnection { implicit connection =>
+      Device.findByAddress(address) match {
+        case Some(d) => Tag.findByDeviceId(d.id.get)
+        case None    => Seq()
+      }
+    }
+  }
 
-  // def findTagByAddress(address: String): Seq[Tag] = {
-  //   withConnection { implicit connection =>
-  //     Tag.findByAddress(address)
-  //   }
-  // }
-
-  // def findTagByAddress(address: String, offset: Int, limit: Int): Seq[Tag] = {
-  //   withConnection { implicit connection =>
-  //     Tag.findByAddress(address, offset, limit)
-  //   }
-  // }
-
+  def findTagByAddress(address: String, offset: Int, limit: Int): Seq[Tag] = {
+    withConnection { implicit connection =>
+      Device.findByAddress(address) match {
+        case Some(d) => Tag.findByDeviceId(d.id.get, offset, limit)
+        case None    => Seq()
+      }
+    }
+  }
 
   def countTagByDeviceId(deviceId: Int): Int = {
     withConnection { implicit connection =>
@@ -77,11 +81,44 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
     }
   }
 
-  // def countTagByAddress(address: String): Int = {
-  //   withConnection { implicit connection =>
-  //     Tag.countByAddress(address)
-  //   }
-  // }
+  def countTagByAddress(address: String): Int = {
+    withConnection { implicit connection =>
+      Device.findByAddress(address) match {
+        case Some(d) => countTagByDeviceId(d.id.get)
+        case None    => 0
+      }
+    }
+  }
+
+  def insertDevice(device: Device): Boolean = {
+    withConnection { implicit connection =>
+      Device.insertAsNeeded(device)
+    }
+  }
+
+  def insertDevice(devices: Seq[Device]): Seq[Boolean] = {
+    withConnection { implicit connection =>
+      devices.map(Device.insertAsNeeded(_))
+    }
+  }
+
+  def updateDeviceNomadic(device: Device) = {
+    withConnection { implicit connection =>
+      Device.updateNomadic(device)
+    }
+  }
+
+  def findDeviceById(id: Int):Option[Device] = {
+    withConnection { implicit connection =>
+      Device.findById(id)
+    }
+  }
+
+  def findDeviceByAddress(address: String):Option[Device] = {
+    withConnection { implicit connection =>
+      Device.findByAddress(address)
+    }
+  }
 
   def insertPhoto(photo: SimplePhoto): Int = {
     withConnection { implicit connection =>
