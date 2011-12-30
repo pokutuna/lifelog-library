@@ -19,7 +19,7 @@ DROP TABLE IF EXISTS tags;
 CREATE TABLE tags (
   id integer PRIMARY KEY AUTOINCREMENT,
   device_id integer,
-  photo_id integer,
+  photo_id integer
 );
 DROP INDEX IF EXISTS tag_photo_id;
 CREATE INDEX tag_photo_id on tags(photo_id);
@@ -37,4 +37,19 @@ CREATE TABLE devices (
 DROP INDEX IF EXISTS device_address;
 CREATE INDEX device_address on devices(address);
 DROP INDEX IF EXISTS device_device_type_address;
-CREATE INDEX device_device_type_address on tags(device_type, address);
+CREATE INDEX device_device_type_address on devices(device_type, address);
+
+
+DROP TABLE IF EXISTS favorite_groups;
+CREATE TABLE favorite_groups (
+  id integer PRIMARY KEY AUTOINCREMENT,
+  label text
+);
+
+
+DROP TABLE IF EXISTS favorite_devices;
+CREATE TABLE favorite_devices (
+  id integer PRIMARY KEY AUTOINCREMENT,
+  group_id integer,
+  device_id integer
+);
