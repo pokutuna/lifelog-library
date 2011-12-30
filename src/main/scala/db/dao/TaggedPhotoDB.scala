@@ -33,15 +33,15 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
     }
   }
 
-  def findTagByAddress(address: String): Seq[Tag] = {
+  def findTagByDeviceId(deviceId: Int): Seq[Tag] = {
     withConnection { implicit connection =>
-      Tag.findByAddress(address)
+      Tag.findByDeviceId(deviceId)
     }
   }
 
-  def findTagByAddress(address: String, offset: Int, limit: Int): Seq[Tag] = {
+  def findTagByDeviceId(deviceId: Int, offset: Int, limit: Int): Seq[Tag] = {
     withConnection { implicit connection =>
-      Tag.findByAddress(address, offset, limit)
+      Tag.findByDeviceId(deviceId, offset, limit)
     }
   }
 
@@ -51,23 +51,31 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
     }
   }
 
-  def findTagByPhotoId(photoId: Int, address: String): Seq[Tag] = {
-    withConnection { implicit connection =>
-      Tag.findByPhotoId(photoId, address)
-    }
-  }
 
-  def countTagByPhotoId(photoId: Int): Int = {
-    withConnection { implicit connection =>
-      Tag.countByPhotoId(photoId)
-    }
-  }
+  // def findTagByAddress(address: String): Seq[Tag] = {
+  //   withConnection { implicit connection =>
+  //     Tag.findByAddress(address)
+  //   }
+  // }
 
-  def countTagByAddress(address: String): Int = {
-    withConnection { implicit connection =>
-      Tag.countByAddress(address)
-    }
-  }
+  // def findTagByAddress(address: String, offset: Int, limit: Int): Seq[Tag] = {
+  //   withConnection { implicit connection =>
+  //     Tag.findByAddress(address, offset, limit)
+  //   }
+  // }
+
+
+  // def countTagByPhotoId(photoId: Int): Int = {
+  //   withConnection { implicit connection =>
+  //     Tag.countByPhotoId(photoId)
+  //   }
+  // }
+
+  // def countTagByAddress(address: String): Int = {
+  //   withConnection { implicit connection =>
+  //     Tag.countByAddress(address)
+  //   }
+  // }
 
   def insertPhoto(photo: SimplePhoto): Int = {
     withConnection { implicit connection =>
@@ -151,7 +159,7 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
   def findTagByPhotoDateTime(start: String, end: String): Seq[Tag] = {
     withConnection { implicit connection =>
       SQL(
-        "select tags.id, tags.photo_id, tags.address, tags.device_type from " + Tag.tableName + " inner join " + SimplePhoto.tableName + " on " + Tag.tableName + ".photo_id = " + SimplePhoto.tableName + ".id where {startTime} <= date_time and date_time <= {endTime} order by tags.id, date_time"
+        "select tags.id, tags.device_id, tags.photo_id from " + Tag.tableName + " inner join " + SimplePhoto.tableName + " on " + Tag.tableName + ".photo_id = " + SimplePhoto.tableName + ".id where {startTime} <= date_time and date_time <= {endTime} order by tags.id, date_time"
       ).on(
         'startTime -> start, 'endTime -> end
       ).as(Tag.simple *)
@@ -161,7 +169,7 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
   def findTagByPhotoDateTime(start: String, end: String, offset: Int, limit: Int): Seq[Tag] = {
     withConnection { implicit connection =>
       SQL(
-        "select tags.id, tags.photo_id, tags.address, tags.device_type from " + Tag.tableName + " inner join " + SimplePhoto.tableName + " on " + Tag.tableName + ".photo_id = " + SimplePhoto.tableName + ".id where {startTime} <= date_time and date_time <= {endTime} order by tags.id, date_time limit {limit} offset {offset}"
+        "select tags.id, tags.device_id, tags.photo_id from " + Tag.tableName + " inner join " + SimplePhoto.tableName + " on " + Tag.tableName + ".photo_id = " + SimplePhoto.tableName + ".id where {startTime} <= date_time and date_time <= {endTime} order by tags.id, date_time limit {limit} offset {offset}"
       ).on(
         'startTime -> start, 'endTime -> end, 'limit -> limit, 'offset -> offset
       ).as(Tag.simple *)

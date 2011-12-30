@@ -32,7 +32,8 @@ object CreateTaggedPhotoDB {
       try {
         val start = DateTime.format(photo.dateTime).ago(minute = 3).asString
         val end = DateTime.format(photo.dateTime).fromNow(minute = 3).asString
-        (sensing.btDetectedIn(start, end) ++ sensing.wifiDetectedIn(start, end)).map(_.toTag(photo.id.get)).distinct
+//        (sensing.btDetectedIn(start, end) ++ sensing.wifiDetectedIn(start, end)).map(_.toTag(photo.id.get)).distinct
+        Seq[Tag]() //TODO
       } catch {
         case e =>
           println(photo.filename + " has error : " + e)

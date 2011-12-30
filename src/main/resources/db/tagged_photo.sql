@@ -32,7 +32,7 @@ CREATE TABLE devices (
   id integer PRIMARY KEY AUTOINCREMENT,
   address text UNIQUE,
   device_type text,
-  nomadic boolean
+  nomadic text
 );
 DROP INDEX IF EXISTS device_address;
 CREATE INDEX device_address on devices(address);

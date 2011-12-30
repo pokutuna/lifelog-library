@@ -7,11 +7,11 @@ import anorm._
 class TaggedPhotoDBSpec extends SpecHelper {
   val db = new TaggedPhotoDB("src/test/resources/test_taggedphoto.db")
 
-  val tag1 = new Tag(1, "hoge", "bt")
-  val tag2 = new Tag(1, "fuga", "bt")
-  val tag3 = new Tag(2, "piyo", "wf")
-  val tag4 = new Tag(3, "piyo", "wf")
-  val tag5 = new Tag(4, "piyo", "wf")
+  val tag1 = new Tag(1, 1)
+  val tag2 = new Tag(2, 1)
+  val tag3 = new Tag(1, 2)
+  val tag4 = new Tag(2, 3)
+  val tag5 = new Tag(3, 4)
 
   val photo1 = new SimplePhoto("dir1", "name1", "2011-11-25 00:00:00", 30, 120)
   val photo2 = new SimplePhoto("dir1", "name2", "2011-11-25 00:01:00", 30, 120)
@@ -46,33 +46,36 @@ class TaggedPhotoDBSpec extends SpecHelper {
     it("should insert Tags") {
       insertTags()
       db.findTagByPhotoId(1).toSet should be (Set(tag1.copy(id = Id(1)), tag2.copy(id = Id(2))))
-      db.findTagByPhotoId(2, "piyo").toList should be (List(tag3.copy(id = Id(3))))
+      db.findTagByPhotoId(3).toList should be (List(tag4.copy(id = Id(4))))
     }
 
     it("should find by address") {
-      insertTags()
-      db.findTagByAddress("piyo").map(_.photoId).toSet should be (Set(2, 3, 4))
-      db.findTagByAddress("piyo", offset = 1, limit = 1).map(_.photoId) should be (List(3))
+      pending
+      // insertTags()
+      // db.findTagByAddress("piyo").map(_.photoId).toSet should be (Set(2, 3, 4))
+      // db.findTagByAddress("piyo", offset = 1, limit = 1).map(_.photoId) should be (List(3))
     }
 
     it("should find by photo id") {
       insertTags()
-      db.findTagByPhotoId(2).map(_.address).toList should be (List("piyo"))
-      db.findTagByPhotoId(1, "hoge").map(_.deviceType).toList should be (List("bt"))
+      db.findTagByPhotoId(2).map(_.deviceId).toList should be (List(1))
+      db.findTagByPhotoId(-1) should be (Seq())
     }
 
     it("should count tags by photo id") {
-      insertTags()
-      db.countTagByPhotoId(1) should be (2)
-      db.countTagByPhotoId(3) should be (1)
-      db.countTagByPhotoId(-1) should be (0)
+      pending
+      // insertTags()
+      // db.countTagByPhotoId(1) should be (2)
+      // db.countTagByPhotoId(3) should be (1)
+      // db.countTagByPhotoId(-1) should be (0)
     }
 
     it("should count tags by address") {
-      insertTags()
-      db.countTagByAddress("piyo") should be (3)
-      db.countTagByAddress("hoge") should be (1)
-      db.countTagByAddress("1000000") should be (0)
+      pending
+      // insertTags()
+      // db.countTagByAddress("piyo") should be (3)
+      // db.countTagByAddress("hoge") should be (1)
+      // db.countTagByAddress("1000000") should be (0)
     }
 
     it("should find tag by id") {
@@ -82,6 +85,12 @@ class TaggedPhotoDBSpec extends SpecHelper {
       db.findTagById(-1) should be (None)
     }
 
+    it("should find tag by device id") {
+      insertTags()
+      db.findTagByDeviceId(1).map(_.photoId).toList should be (List(1, 2))
+      db.findTagByDeviceId(2).map(_.photoId).toList should be (List(1, 3))
+      db.findTagByDeviceId(-1).map(_.photoId).toList should be (List())
+    }
   }
 
   describe("SimplePhoto") {
@@ -156,8 +165,6 @@ class TaggedPhotoDBSpec extends SpecHelper {
       oldest should be ("2011-11-25 00:00:00")
     }
 
-
-
   }
 
   describe("Join Table") {
@@ -165,14 +172,14 @@ class TaggedPhotoDBSpec extends SpecHelper {
       insertPhotos()
       insertTags()
       val tags = db.findTagByPhotoDateTime("2011-11-25 00:00:00", "2011-11-25 00:01:00")
-      tags.map(_.address).toList should be (List("hoge", "fuga", "piyo"))
+      tags.map(_.deviceId).toList should be (List(1, 2, 1))
     }
 
     it("should find tag by photo date time with limit and offset") {
       insertPhotos()
       insertTags()
       val tags = db.findTagByPhotoDateTime("2011-11-25 00:00:00", "2011-11-25 00:01:00", offset = 2, limit = 100)
-      tags.map(_.address).toList should be (List("piyo"))
+      tags.map(_.deviceId).toList should be (List(1))
     }
   }
 
