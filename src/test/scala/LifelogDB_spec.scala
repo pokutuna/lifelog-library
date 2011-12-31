@@ -82,12 +82,13 @@ class LifelogDBSpec extends SpecHelper {
   }
 
   describe("Insert Photo Records") {
+
     it("should insert PhotoRecord") {
       val photo = new PhotoRecord("dir5", "fn5", "hogedate", 35.0, 135.0, 10, 10, 10, 2011, 7, 7, 0, 0, 0, "fuga")
-      db.insertPhoto(photo)
+      db.insertPhoto(photo) should be (5)
       db.existsFile("dir5", "fn5") should be (true)
 
-      db.insertPhoto(photo)
+      db.insertPhoto(photo) should be (6)
       val list = db.photoTakenIn("hogedate", "hogedate").toList
       list should be (List(photo.copy(id = Id(5)), photo.copy(id = Id(6))))
     }

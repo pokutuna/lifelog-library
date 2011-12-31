@@ -57,7 +57,7 @@ object PhotoRecord {
     }
   }
 
-  def insert(photo: PhotoRecord)(implicit connection: Connection): PhotoRecord = {
+  def insert(photo: PhotoRecord)(implicit connection: Connection): Int = {
     SQL(
       "insert into " + tableName + "(directory, filename, org_date, latitude, longitude, width, height, file_size, year, month, day, hour, minute, second, comment) values ({directory}, {filename}, {orgDate}, {latitude}, {longitude}, {width}, {height}, {fileSize}, {year}, {month}, {day}, {hour}, {minute}, {second}, {comment})"
     ).on(
@@ -67,7 +67,7 @@ object PhotoRecord {
       'month -> photo.month, 'day -> photo.day, 'hour -> photo.hour, 'minute -> photo.minute,
       'second -> photo.second, 'comment -> photo.comment
     ).executeUpdate()
-    return photo
+    SQL("select last_insert_rowid();").as(get[Int]("last_insert_rowid()"))
   }
 
   def findById(id: Int)(implicit connection: Connection): Option[PhotoRecord] = {
