@@ -59,10 +59,10 @@ object Device {
     ).on('address -> address).as(simple ?)
   }
 
-  def insertAsNeeded(device: Device)(implicit connection: Connection): Boolean = {
+  def insertAsNeeded(device: Device)(implicit connection: Connection): Int = {
     find(device) match {
-      case Some(_) => return false
-      case None    => insert(device); return true;
+      case Some(d) => d.id.get
+      case None    => insert(device)
     }
   }
 
@@ -72,6 +72,7 @@ object Device {
     ).on(
       'address -> device.address, 'deviceType -> device.deviceType, 'nomadic -> device.nomadic
     ).executeUpdate()
+    SQL("select last_insert_rowid();").as(get[Int]("last_insert_rowid()"))
   }
 
   def updateNomadic(device: Device)(implicit connection: Connection) = {

@@ -46,13 +46,12 @@ class TaggedPhotoDBSpec extends SpecHelper {
   describe("Tag") {
 
     it("should insert Tag") {
-      db.insertTag(tag1)
-      val idTag = tag1.copy(id = Id(1))
-      db.findTag(idTag) should be (Some(idTag))
+      db.insertTag(tag1) should be (1)
+      db.findTag(tag1) should be (Some(tag1.copy(id = Id(1))))
     }
 
     it("should insert Tags") {
-      insertTags()
+      insertTags().toList should be (List(1, 2, 3, 4, 5))
       db.findTagByPhotoId(1).toSet should be (Set(tag1.copy(id = Id(1)), tag2.copy(id = Id(2))))
       db.findTagByPhotoId(3).toList should be (List(tag4.copy(id = Id(4))))
     }
@@ -111,8 +110,10 @@ class TaggedPhotoDBSpec extends SpecHelper {
   describe("Device") {
 
     it("should insert device") {
-      insertDevices()
-      db.insertDevice(new Device("temp_device", "temp_type", ""))
+      insertDevices().toList should be (List(1, 2, 3))
+      db.insertDevice(new Device("temp_device", "temp_type", "")) should be (4)
+      insertDevices().toList should be (List(1, 2, 3))
+      db.insertDevice(new Device("temp_device2", "hoge", "fuga")) should be (5)
     }
 
     it("should find by id") {
@@ -143,9 +144,9 @@ class TaggedPhotoDBSpec extends SpecHelper {
   describe("SimplePhoto") {
 
     it("should insert photo") {
-      db.insertPhoto(photo1)
-      val idPhoto = photo1.copy(id = Id(1))
-      db.findPhoto(idPhoto) should be (Some(idPhoto))
+      db.insertPhoto(photo1) should be (1)
+      db.findPhoto(photo1) should be (Some(photo1.copy(id = Id(1))))
+      insertPhotos should be (List(2, 3, 4, 5, 6))
     }
 
     it("should return id after inserting") {

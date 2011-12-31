@@ -22,12 +22,13 @@ object Tag {
     }
   }
 
-  def insert(tag: Tag)(implicit connection: Connection) = {
+  def insert(tag: Tag)(implicit connection: Connection): Int = {
     SQL(
       "insert into " + tableName + "(device_id, photo_id) values({deviceId}, {photoId})"
     ).on(
       'deviceId -> tag.deviceId, 'photoId -> tag.photoId
     ).executeUpdate()
+    SQL("select last_insert_rowid();").as(get[Int]("last_insert_rowid()"))
   }
 
   def find(tag: Tag)(implicit connection: Connection): Option[Tag] = {

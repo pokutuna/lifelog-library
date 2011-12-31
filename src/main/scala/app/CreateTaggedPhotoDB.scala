@@ -28,20 +28,24 @@ object CreateTaggedPhotoDB {
       copyPhotosRec(lifelog, 0, 1000)
     }
 
-    def createTag(photo: SimplePhoto, sensing: SensingDB): Seq[Tag] = {
+    def createDevices(photo: SimplePhoto, sensing: SensingDB): Seq[Device] = {
       try {
         val start = DateTime.format(photo.dateTime).ago(minute = 3).asString
         val end = DateTime.format(photo.dateTime).fromNow(minute = 3).asString
-//        (sensing.btDetectedIn(start, end) ++ sensing.wifiDetectedIn(start, end)).map(_.toTag(photo.id.get)).distinct
-        Seq[Tag]() //TODO
+        (sensing.btDetectedIn(start, end) ++ sensing.wifiDetectedIn(start, end)).map(_.toDevice).distinct
       } catch {
         case e =>
           println(photo.filename + " has error : " + e)
+          e.printStackTrace()
           List()
       }
     }
 
-    def insertTags(sensing: SensingDB) = {
+    def createTags(photo: SimplePhoto, deviceIds: Seq[Int]): Seq[Tag] = {
+      deviceIds.map(new Tag(_, photo.id.get))
+    }
+
+    def insertTagsAndDevices(sensing: SensingDB) = {
       @tailrec
       def insertTagsRec(sensing: SensingDB, offset: Int, limit: Int): Unit = {
         println("inserting tags: " + offset)
@@ -49,8 +53,12 @@ object CreateTaggedPhotoDB {
         if (photos.isEmpty)
           return
         else {
-          val tags = photos.flatMap(createTag(_, sensing))
-          db.insertTag(tags)
+          photos.foreach { p =>
+            val devices = createDevices(p, sensing)
+            val deviceIds = db.insertDevice(devices)
+            val tags = createTags(p, deviceIds)
+            db.insertTag(tags)
+          }
           insertTagsRec(sensing, offset + limit, limit)
         }
       }
@@ -64,7 +72,7 @@ object CreateTaggedPhotoDB {
 
     val dbm = new TaggedPhotoDBManager(dbPath.getOrElse("tagged_photo.db"))
     dbm.copyPhotos(lifelogDB)
-    dbm.insertTags(sensingDB)
+    dbm.insertTagsAndDevices(sensingDB)
   }
 
   def main(args: Array[String]) = {

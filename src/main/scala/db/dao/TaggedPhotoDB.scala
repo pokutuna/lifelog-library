@@ -9,15 +9,15 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
 
   val schemaUrl = Resource.getUrl("db/tagged_photo.sql")
 
-  def insertTag(tag: Tag) = {
+  def insertTag(tag: Tag): Int = {
     withConnection { implicit connection =>
       Tag.insert(tag)
     }
   }
 
-  def insertTag(tags: Seq[Tag]) = {
+  def insertTag(tags: Seq[Tag]): Seq[Int] = {
     withTransaction { implicit connection =>
-      for(tag <- tags) { Tag.insert(tag) }
+      tags.map(Tag.insert(_))
     }
   }
 
@@ -90,13 +90,13 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
     }
   }
 
-  def insertDevice(device: Device): Boolean = {
+  def insertDevice(device: Device): Int = {
     withConnection { implicit connection =>
       Device.insertAsNeeded(device)
     }
   }
 
-  def insertDevice(devices: Seq[Device]): Seq[Boolean] = {
+  def insertDevice(devices: Seq[Device]): Seq[Int] = {
     withConnection { implicit connection =>
       devices.map(Device.insertAsNeeded(_))
     }
@@ -123,13 +123,12 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
   def insertPhoto(photo: SimplePhoto): Int = {
     withConnection { implicit connection =>
       SimplePhoto.insert(photo)
-      SimplePhoto.find(photo).get.id.get
     }
   }
 
-  def insertPhoto(photos: Seq[SimplePhoto]) = {
+  def insertPhoto(photos: Seq[SimplePhoto]): Seq[Int] = {
     withTransaction { implicit connection =>
-      for(photo <- photos) { SimplePhoto.insert(photo) }
+      photos.map(SimplePhoto.insert(_))
     }
   }
 

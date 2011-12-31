@@ -14,7 +14,4 @@ trait DetectedRecord {
     new Device(address, deviceType, "")
   }
 
-  def toTag(deviceId: Int, photoId: Int): Tag = {
-    new Tag(deviceId, photoId)
-  }
 }

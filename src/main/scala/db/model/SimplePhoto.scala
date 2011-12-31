@@ -40,6 +40,7 @@ object SimplePhoto {
       'directory -> photo.directory, 'filename -> photo.filename, 'dateTime -> photo.dateTime,
       'latitude -> photo.latitude, 'longitude -> photo.longitude
     ).executeUpdate()
+    SQL("select last_insert_rowid();").as(get[Int]("last_insert_rowid()"))
   }
 
   def take(offset: Int, limit: Int)(implicit connection: Connection): Seq[SimplePhoto] = {
