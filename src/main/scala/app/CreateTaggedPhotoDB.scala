@@ -30,12 +30,16 @@ object CreateTaggedPhotoDB {
 
     def createDevices(photo: SimplePhoto, sensing: SensingDB): Seq[Device] = {
       try {
+        require(photo.dateTime != "")
         val start = DateTime.format(photo.dateTime).ago(minute = 3).asString
         val end = DateTime.format(photo.dateTime).fromNow(minute = 3).asString
         (sensing.btDetectedIn(start, end) ++ sensing.wifiDetectedIn(start, end)).map(_.toDevice).distinct
       } catch {
+        case e: IllegalArgumentException =>
+          println(photo.filename + " doesn't have dateTime field")
+          List()
         case e =>
-          println(photo.filename + " has error : " + e)
+          println(photo.filename + " has error: " + e)
           e.printStackTrace()
           List()
       }
