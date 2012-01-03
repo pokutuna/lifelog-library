@@ -40,6 +40,12 @@ class DateTimeSpec extends SpecHelper {
     it("should throw ParseException when applying invalid String") {
       evaluating { DateTime.format("") } should produce [java.text.ParseException]
     }
+
+    it("should get rounded day") {
+      val a = DateTime.format("2012-01-03 16:02:30")
+      a.roundDayStart should be (DateTime(2012, 1, 3, 0, 0, 0))
+      a.roundDayEnd should be (DateTime(2012, 1, 3, 23, 59, 59))
+    }
   }
 
   describe("Implicits") {
