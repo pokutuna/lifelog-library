@@ -13,9 +13,9 @@ class TaggedPhotoDBSpec extends SpecHelper {
   val tag4 = new Tag(3, 3)
   val tag5 = new Tag(3, 4)
 
-  val dev1 = new Device("hoge", "bt", "nomad1")
-  val dev2 = new Device("fuga", "bt", "nomad2")
-  val dev3 = new Device("piyo", "wf", "nomad3")
+  val dev1 = new Device("hoge", "bt")
+  val dev2 = new Device("fuga", "bt")
+  val dev3 = new Device("piyo", "wf")
 
   val photo1 = new SimplePhoto("dir1", "name1", "2011-11-25 00:00:00", 30, 120)
   val photo2 = new SimplePhoto("dir1", "name2", "2011-11-25 00:01:00", 30, 120)
@@ -111,9 +111,9 @@ class TaggedPhotoDBSpec extends SpecHelper {
 
     it("should insert device") {
       insertDevices().toList should be (List(1, 2, 3))
-      db.insertDevice(new Device("temp_device", "temp_type", "")) should be (4)
+      db.insertDevice(new Device("temp_device", "temp_type")) should be (4)
       insertDevices().toList should be (List(1, 2, 3))
-      db.insertDevice(new Device("temp_device2", "hoge", "fuga")) should be (5)
+      db.insertDevice(new Device("temp_device2", "hoge")) should be (5)
     }
 
     it("should find by id") {

@@ -102,12 +102,6 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
     }
   }
 
-  def updateDeviceNomadic(device: Device) = {
-    withConnection { implicit connection =>
-      Device.updateNomadic(device)
-    }
-  }
-
   def findDeviceById(id: Int):Option[Device] = {
     withConnection { implicit connection =>
       Device.findById(id)

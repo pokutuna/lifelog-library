@@ -11,7 +11,7 @@ trait DetectedRecord {
       case w if w.isInstanceOf[WifiDetected] => "wf"
       case _ => throw new RuntimeException("can't conver to tag'")
     }
-    new Device(address, deviceType, "")
+    new Device(address, deviceType)
   }
 
 }

@@ -36,14 +36,25 @@ DROP TABLE IF EXISTS devices;
 CREATE TABLE devices (
   id integer PRIMARY KEY AUTOINCREMENT,
   address text UNIQUE,
-  device_type text,
-  nomadic text
+  device_type text
 );
 DROP INDEX IF EXISTS device_address;
 CREATE INDEX device_address on devices(address);
 DROP INDEX IF EXISTS device_device_type_address;
 CREATE INDEX device_device_type_address on devices(device_type, address);
 
+
+DROP TABLE IF EXISTS device_nomads;
+CREATE TABLE device_nomads (
+  device_id integer PRIMARY KEY,
+  status text
+);
+
+DROP TABLE IF EXISTS device_labels;
+CREATE TABLE device_labels (
+  device_id integer PRIMARY KEY,
+  label text
+);
 
 DROP TABLE IF EXISTS favorite_groups;
 CREATE TABLE favorite_groups (
@@ -56,8 +67,7 @@ DROP TABLE IF EXISTS favorite_devices;
 CREATE TABLE favorite_devices (
   id integer PRIMARY KEY AUTOINCREMENT,
   group_id integer,
-  device_id integer,
-  label text
+  device_id integer
 );
 
 
