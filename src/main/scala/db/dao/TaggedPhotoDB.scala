@@ -223,4 +223,23 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
       SimplePhoto.oldestDate
     }
   }
+
+  def insertFavorite(label: String, deviceIds: Seq[Int]) = {
+    withConnection { implicit connection =>
+      Favorite.insertFavorite(label, deviceIds)
+    }
+  }
+
+  def deleteFavorite(groupId: Int) = {
+    withConnection { implicit connection =>
+      Favorite.deleteFavorite(groupId)
+    }
+  }
+
+  def allFavorites: Seq[Favorite] = {
+    withConnection { implicit connection =>
+      Favorite.allFavorites
+    }
+  }
+
 }
