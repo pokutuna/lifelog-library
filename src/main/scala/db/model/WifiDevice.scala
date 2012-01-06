@@ -11,8 +11,7 @@ object WifiDevice extends DeviceRecordQuery[WifiDevice] {
   val tableName = "wifi_devices"
 
   val simple = {
-    get[String](tableName + ".address") ~/
-    get[String](tableName + ".name") ^^ {
+    get[String](tableName + ".address") ~ get[String](tableName + ".name") map {
       case address~name => WifiDevice(address, name)
     }
   }

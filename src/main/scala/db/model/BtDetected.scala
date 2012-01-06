@@ -11,9 +11,7 @@ object BtDetected extends DetectedRecordQuery[BtDetected] {
   val tableName = "bt_detected"
 
   val simple = {
-    get[String](tableName + ".address") ~/
-    get[String](tableName + ".date_time") ~/
-    get[Int](tableName + ".file_id") ^^ {
+    get[String](tableName + ".address") ~ get[String](tableName + ".date_time") ~ get[Int](tableName + ".file_id") map {
       case address~dateTime~fileId => BtDetected(address, dateTime, fileId)
     }
   }

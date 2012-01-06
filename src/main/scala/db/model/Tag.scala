@@ -15,9 +15,7 @@ object Tag {
   val tableName = "tags"
 
   val simple = {
-    get[Pk[Int]]("id") ~/
-    get[Int]("device_id") ~/
-    get[Int]("photo_id") ^^ {
+    get[Pk[Int]]("id") ~ get[Int]("device_id") ~ get[Int]("photo_id") map {
       case id~deviceId~photoId => Tag(id, deviceId, photoId)
     }
   }
@@ -28,7 +26,7 @@ object Tag {
     ).on(
       'deviceId -> tag.deviceId, 'photoId -> tag.photoId
     ).executeUpdate()
-    SQL("select last_insert_rowid();").as(get[Int]("last_insert_rowid()"))
+    SQL("select last_insert_rowid();").as(scalar[Int].single)
   }
 
   def find(tag: Tag)(implicit connection: Connection): Option[Tag] = {
@@ -43,7 +41,7 @@ object Tag {
       "select * from " + tableName + " where id = {id} and device_id = {deviceId} and photo_id = {photoId} limit 1"
     ).on(
       'id -> tag.id, 'deviceId -> tag.deviceId, 'photoId -> tag.photoId
-    ).as(simple ?)
+    ).as(simple.singleOpt)
   }
 
   def findIgnoreId(tag: Tag)(implicit connection: Connection): Option[Tag] = {
@@ -51,13 +49,13 @@ object Tag {
       "select * from " + tableName + " where device_id = {deviceId} and photo_id = {photoId} limit 1"
     ).on(
       'deviceId -> tag.deviceId, 'photoId -> tag.photoId
-    ).as(simple ?)
+    ).as(simple.singleOpt)
   }
 
   def findById(id: Int)(implicit connection: Connection): Option[Tag] = {
     SQL(
       "select * from " + tableName + " where id = {id} limit 1"
-    ).on('id -> id).as(simple ?)
+    ).on('id -> id).as(simple.singleOpt)
   }
 
   def findByDeviceId(deviceId: Int)(implicit connection: Connection): Seq[Tag] = {
@@ -81,13 +79,13 @@ object Tag {
   def countByDeviceId(deviceId: Int)(implicit connection: Connection): Int = {
     SQL(
       "select count(*) from " + tableName + " where device_id = {deviceId}"
-    ).on('deviceId -> deviceId).as(get[Int]("count(*)"))
+    ).on('deviceId -> deviceId).as(scalar[Int].single)
   }
 
   def countByPhotoId(photoId: Int)(implicit connection: Connection): Int = {
     SQL(
       "select count(*) from " + tableName + " where photo_id = {photoId}"
-    ).on('photoId -> photoId).as(get[Int]("count(*)"))
+    ).on('photoId -> photoId).as(scalar[Int].single)
   }
 
 }

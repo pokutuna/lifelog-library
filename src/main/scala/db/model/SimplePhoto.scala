@@ -23,12 +23,12 @@ object SimplePhoto {
   val tableName = "simple_photos"
 
   val simple = {
-    get[Pk[Int]](tableName + ".id") ~/
-    get[String](tableName + ".directory") ~/
-    get[String](tableName + ".filename") ~/
-    get[String](tableName + ".date_time") ~/
-    get[Double](tableName + ".latitude") ~/
-    get[Double](tableName + ".longitude") ^^ {
+    get[Pk[Int]](tableName + ".id") ~
+    get[String](tableName + ".directory") ~
+    get[String](tableName + ".filename") ~
+    get[String](tableName + ".date_time") ~
+    get[Double](tableName + ".latitude") ~
+    get[Double](tableName + ".longitude") map {
       case id~dir~name~orgDate~lat~lon => SimplePhoto(id, dir, name, orgDate, lat, lon)
     }
   }
@@ -40,7 +40,7 @@ object SimplePhoto {
       'directory -> photo.directory, 'filename -> photo.filename, 'dateTime -> photo.dateTime,
       'latitude -> photo.latitude, 'longitude -> photo.longitude
     ).executeUpdate()
-    SQL("select last_insert_rowid();").as(get[Int]("last_insert_rowid()"))
+    SQL("select last_insert_rowid();").as(scalar[Int].single)
   }
 
   def take(offset: Int, limit: Int)(implicit connection: Connection): Seq[SimplePhoto] = {
@@ -63,7 +63,7 @@ object SimplePhoto {
     ).on(
       'id -> photo.id.get, 'directory -> photo.directory, 'filename -> photo.filename,
       'dateTime -> photo.dateTime, 'lat -> photo.latitude, 'lon -> photo.longitude
-    ).as(simple ?)
+    ).as(simple.singleOpt)
   }
 
   def findIgnoreId(photo: SimplePhoto)(implicit connection: Connection): Option[SimplePhoto] = {
@@ -72,13 +72,13 @@ object SimplePhoto {
     ).on(
       'directory -> photo.directory, 'filename -> photo.filename,
       'dateTime -> photo.dateTime, 'lat -> photo.latitude, 'lon -> photo.longitude
-    ).as(simple ?)
+    ).as(simple.singleOpt)
   }
 
   def findById(id: Int)(implicit connection: Connection): Option[SimplePhoto] = {
     SQL(
       "select * from " + tableName + " where id = {id}"
-    ).on('id -> id).as(simple ?)
+    ).on('id -> id).as(simple.singleOpt)
   }
 
   def findByName(directory: String, filename: String)(implicit connection: Connection): Seq[SimplePhoto] = {
@@ -141,12 +141,13 @@ object SimplePhoto {
   def latestDate(implicit connection: Connection): String = {
     SQL(
       "select date_time from " + tableName + " order by date_time desc limit 1"
-    ).as(get[String]("date_time"))
+    ).as(scalar[String].single)
   }
 
   def oldestDate(implicit connection: Connection): String = {
     SQL(
       "select date_time from " + tableName + " order by date_time asc limit 1"
-    ).as(get[String]("date_time"))
+    ).as(scalar[String].single)
   }
+
 }

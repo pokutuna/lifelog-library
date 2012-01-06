@@ -11,10 +11,8 @@ object WifiDetected extends DetectedRecordQuery[WifiDetected]{
   val tableName = "wifi_detected"
 
   val simple = {
-    get[String](tableName + ".address") ~/
-    get[String](tableName + ".date_time") ~/
-    get[Int](tableName + ".strength") ~/
-    get[Int](tableName + ".file_id") ^^ {
+    get[String](tableName + ".address") ~ get[String](tableName + ".date_time") ~
+    get[Int](tableName + ".strength") ~ get[Int](tableName + ".file_id") map {
       case address~dateTime~strength~fileId =>
         WifiDetected(address, dateTime, strength, fileId)
     }

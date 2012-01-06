@@ -7,14 +7,14 @@ import java.sql._
 trait DeviceRecordQuery[T <: DeviceRecord] {
 
   val tableName: String
-  val simple:Parser[T]
+  val simple:RowParser[T]
 
   def find(device: T)(implicit connection: Connection): Option[T] = {
     SQL(
       "select * from " + tableName + " where address = {address} and name = {name}"
     ).on(
       'address -> device.address, 'name -> device.name
-    ).as(simple ?)
+    ).as(simple.singleOpt)
   }
 
   def findByName(name: String)(implicit connection: Connection): Seq[T] = {
@@ -26,7 +26,7 @@ trait DeviceRecordQuery[T <: DeviceRecord] {
   def findByAddress(address: String)(implicit connection: Connection): Option[T] = {
     SQL(
       "select * from " + tableName + " where address = {address}"
-    ).on('address -> address).as(simple ?)
+    ).on('address -> address).as(simple.singleOpt)
   }
 
   def delete(device: T)(implicit connection: Connection) = {

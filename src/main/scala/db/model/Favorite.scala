@@ -21,7 +21,7 @@ object Favorite {
   val groupTableName = "favorite_groups"
 
   val groupSimple = {
-    get[Pk[Int]]("id") ~ get[String]("label") ^^ {
+    get[Pk[Int]]("id") ~ get[String]("label") map {
       case id~label => FavoriteGroup(id, label)
     }
   }
@@ -29,9 +29,7 @@ object Favorite {
   val deviceTableName = "favorite_devices"
 
   val deviceSimple = {
-    get[Pk[Int]]("id") ~/
-    get[Int]("group_id") ~/
-    get[Int]("device_id") ^^ {
+    get[Pk[Int]]("id") ~ get[Int]("group_id") ~ get[Int]("device_id") map {
       case id~groupId~deviceId => FavoriteDevice(id, groupId, deviceId)
     }
   }
@@ -56,7 +54,7 @@ object Favorite {
   def findFavorite(id: Int)(implicit connection: Connection): Option[Favorite] = {
     val group = SQL(
       "select * from " + groupTableName + " where id = {id}"
-    ).on('id -> id).as(groupSimple ?)
+    ).on('id -> id).as(groupSimple.singleOpt)
 
     group match {
       case Some(g) => Some(Favorite(g, findFavoriteDeviceByGroupId(g.id.get)))
@@ -78,7 +76,7 @@ object Favorite {
     SQL(
       "insert into " + groupTableName + "(label) values ({label})"
     ).on('label -> label).executeUpdate()
-    SQL("select last_insert_rowid();").as(get[Int]("last_insert_rowid()"))
+    SQL("select last_insert_rowid();").as(scalar[Int].single)
   }
 
   def deleteFavoriteGroup(id: Int)(implicit connection: Connection) = {
@@ -89,7 +87,7 @@ object Favorite {
     SQL(
       "insert into " + deviceTableName + "(group_id, device_id) values ({groupId}, {deviceId})"
     ).on('groupId -> groupId, 'deviceId -> deviceId).executeUpdate()
-    SQL("select last_insert_rowid();").as(get[Int]("last_insert_rowid()"))
+    SQL("select last_insert_rowid();").as(scalar[Int].single)
   }
 
   def deleteFavoriteDeviceByGroupId(groupId: Int)(implicit connection: Connection) = {

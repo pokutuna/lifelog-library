@@ -15,9 +15,9 @@ object RegisteredFile {
   val tableName = "registered_files"
 
   val simple = {
-    get[Pk[Int]]("file_id") ~/
-    get[String]("file_name") ~/
-    get[String]("md5_hex") ^^ {
+    get[Pk[Int]]("file_id") ~
+    get[String]("file_name") ~
+    get[String]("md5_hex") map {
       case fileId~fileName~md5hex => RegisteredFile(fileId, fileName, md5hex)
     }
   }
@@ -40,12 +40,12 @@ object RegisteredFile {
       "select * from " + tableName + " where file_id = {fileId} and file_name = {fileName} and md5_hex = {md5hex} limit 1"
     ).on(
       'fileId -> file.fileId, 'fileName -> file.fileName, 'md5hex -> file.md5hex
-    ).as(simple ?)
+    ).as(simple.singleOpt)
   }
 
   def findIgnoreId(file: RegisteredFile)(implicit connection: Connection): Option[RegisteredFile] = {
     SQL(
       "select * from " + tableName + " where file_name = {fileName} and md5_hex = {md5hex} limit 1"
-    ).on('fileName -> file.fileName, 'md5hex -> file.md5hex).as(simple ?)
+    ).on('fileName -> file.fileName, 'md5hex -> file.md5hex).as(simple.singleOpt)
   }
 }
