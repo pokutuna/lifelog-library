@@ -34,50 +34,70 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
   }
 
   def findTagByDeviceId(deviceId: Int): Seq[Tag] = {
+    findTagByDeviceId(deviceId, Tag.defaultDiffSec)
+  }
+
+  def findTagByDeviceId(deviceId: Int, diffSec: Int): Seq[Tag] = {
     withConnection { implicit connection =>
-      Tag.findByDeviceId(deviceId)
+      Tag.findByDeviceId(deviceId, diffSec)
     }
   }
 
   def findTagByDeviceId(deviceId: Int, offset: Int, limit: Int): Seq[Tag] = {
+    findTagByDeviceId(deviceId, Tag.defaultDiffSec, offset, limit)
+  }
+
+  def findTagByDeviceId(deviceId: Int, diffSec: Int, offset: Int, limit: Int): Seq[Tag] = {
     withConnection { implicit connection =>
-      Tag.findByDeviceId(deviceId, offset, limit)
+      Tag.findByDeviceId(deviceId, offset, limit, diffSec)
     }
   }
 
   def findTagByPhotoId(photoId: Int): Seq[Tag] = {
+    findTagByPhotoId(photoId, Tag.defaultDiffSec)
+  }
+
+  def findTagByPhotoId(photoId: Int, diffSec: Int = Tag.defaultDiffSec): Seq[Tag] = {
     withConnection { implicit connection =>
-      Tag.findByPhotoId(photoId)
+      Tag.findByPhotoId(photoId, diffSec)
     }
   }
 
   def findTagByAddress(address: String): Seq[Tag] = {
+    findTagByAddress(address, Tag.defaultDiffSec)
+  }
+
+  def findTagByAddress(address: String, diffSec: Int): Seq[Tag] = {
     withConnection { implicit connection =>
       Device.findByAddress(address) match {
-        case Some(d) => Tag.findByDeviceId(d.id.get)
+        case Some(d) => Tag.findByDeviceId(d.id.get, diffSec)
         case None    => Seq()
       }
     }
   }
 
   def findTagByAddress(address: String, offset: Int, limit: Int): Seq[Tag] = {
+    findTagByAddress(address, Tag.defaultDiffSec, offset, limit)
+  }
+
+  def findTagByAddress(address: String, diffSec: Int, offset: Int, limit: Int): Seq[Tag] = {
     withConnection { implicit connection =>
       Device.findByAddress(address) match {
-        case Some(d) => Tag.findByDeviceId(d.id.get, offset, limit)
+        case Some(d) => Tag.findByDeviceId(d.id.get, offset, limit, diffSec)
         case None    => Seq()
       }
     }
   }
 
-  def countTagByDeviceId(deviceId: Int): Int = {
+  def countTagByDeviceId(deviceId: Int, diffSec: Int = Tag.defaultDiffSec): Int = {
     withConnection { implicit connection =>
-      Tag.countByDeviceId(deviceId)
+      Tag.countByDeviceId(deviceId, diffSec)
     }
   }
 
-  def countTagByPhotoId(photoId: Int): Int = {
+  def countTagByPhotoId(photoId: Int, diffSec: Int = Tag.defaultDiffSec): Int = {
     withConnection { implicit connection =>
-      Tag.countByPhotoId(photoId)
+      Tag.countByPhotoId(photoId, diffSec)
     }
   }
 
@@ -193,20 +213,29 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
   }
 
   def findTagByPhotoDateTime(start: String, end: String): Seq[Tag] = {
+    findTagByPhotoDateTime(start, end, Tag.defaultDiffSec)
+  }
+
+  def findTagByPhotoDateTime(start: String, end: String, diffSec: Int): Seq[Tag] = {
     withConnection { implicit connection =>
       SQL(
-        "select tags.id, tags.device_id, tags.photo_id from " + Tag.tableName + " inner join " + SimplePhoto.tableName + " on " + Tag.tableName + ".photo_id = " + SimplePhoto.tableName + ".id where {startTime} <= date_time and date_time <= {endTime} order by tags.id, date_time"
+        "select tags.id, tags.device_id, tags.photo_id, tags.diff_sec from " + Tag.tableName + " inner join " + SimplePhoto.tableName + " on " + Tag.tableName + ".photo_id = " + SimplePhoto.tableName + ".id where  {minDiff} <= diff_sec and diff_sec <= {maxDiff} and {startTime} <= date_time and date_time <= {endTime} order by tags.id"
       ).on(
-        'startTime -> start, 'endTime -> end
+        'minDiff -> -diffSec, 'maxDiff -> diffSec, 'startTime -> start, 'endTime -> end
       ).as(Tag.simple *)
     }
   }
 
   def findTagByPhotoDateTime(start: String, end: String, offset: Int, limit: Int): Seq[Tag] = {
+    findTagByPhotoDateTime(start, end, Tag.defaultDiffSec, offset, limit)
+  }
+
+  def findTagByPhotoDateTime(start: String, end: String, diffSec: Int, offset: Int, limit: Int): Seq[Tag] = {
     withConnection { implicit connection =>
       SQL(
-        "select tags.id, tags.device_id, tags.photo_id from " + Tag.tableName + " inner join " + SimplePhoto.tableName + " on " + Tag.tableName + ".photo_id = " + SimplePhoto.tableName + ".id where {startTime} <= date_time and date_time <= {endTime} order by tags.id, date_time limit {limit} offset {offset}"
+        "select tags.id, tags.device_id, tags.photo_id, tags.diff_sec from " + Tag.tableName + " inner join " + SimplePhoto.tableName + " on " + Tag.tableName + ".photo_id = " + SimplePhoto.tableName + ".id where  {minDiff} <= diff_sec and diff_sec <= {maxDiff} and {startTime} <= date_time and date_time <= {endTime} order by tags.id limit {limit} offset {offset}"
       ).on(
+        'minDiff -> -diffSec, 'maxDiff -> diffSec,
         'startTime -> start, 'endTime -> end, 'limit -> limit, 'offset -> offset
       ).as(Tag.simple *)
     }

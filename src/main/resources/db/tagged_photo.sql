@@ -25,7 +25,7 @@ CREATE TABLE tags (
 DROP INDEX IF EXISTS tag_photo_id;
 CREATE INDEX tag_photo_id on tags(photo_id);
 DROP INDEX IF EXISTS tag_ids;
-CREATE INDEX tag_ids on tags(device_id, photo_id);
+CREATE INDEX tag_ids on tags(device_id, photo_id, diff_sec);
 DROP INDEX IF EXISTS tag_diff_sec_photo_id;
 CREATE INDEX tag_diff_sec_photo_id on tags(diff_sec, photo_id);
 DROP INDEX IF EXISTS tag_dif_sec_ids;

@@ -7,13 +7,15 @@ import anorm._
 class TaggedPhotoDBSpec extends SpecHelper {
   val db = new TaggedPhotoDB("src/test/resources/test_taggedphoto.db")
 
-  val tag1 = new Tag(1, 1)
+  val tag1 = new Tag(1, 1) // Tag(deviceId, photoId)
   val tag2 = new Tag(2, 1)
   val tag3 = new Tag(3, 2)
   val tag4 = new Tag(3, 3)
   val tag5 = new Tag(3, 4)
+  val tag6 = new Tag(1, 3, 500)
+  val tag7 = new Tag(2, 3, -300)
 
-  val dev1 = new Device("hoge", "bt")
+  val dev1 = new Device("hoge", "bt") // Device(address, deviceType)
   val dev2 = new Device("fuga", "bt")
   val dev3 = new Device("piyo", "wf")
 
@@ -32,7 +34,7 @@ class TaggedPhotoDBSpec extends SpecHelper {
   }
 
   def insertTags() = {
-    db.insertTag(List(tag1, tag2, tag3, tag4, tag5))
+    db.insertTag(List(tag1, tag2, tag3, tag4, tag5, tag6, tag7))
   }
 
   def insertPhotos() = {
@@ -51,7 +53,7 @@ class TaggedPhotoDBSpec extends SpecHelper {
     }
 
     it("should insert Tags") {
-      insertTags().toList should be (List(1, 2, 3, 4, 5))
+      insertTags().toList should be (List(1, 2, 3, 4, 5, 6, 7))
       db.findTagByPhotoId(1).toSet should be (Set(tag1.copy(id = Id(1)), tag2.copy(id = Id(2))))
       db.findTagByPhotoId(3).toList should be (List(tag4.copy(id = Id(4))))
     }
@@ -285,5 +287,54 @@ class TaggedPhotoDBSpec extends SpecHelper {
       db.getInfo("a") should be (None)
     }
 
+  }
+
+
+  describe("Finding Tag by DiffSec") {
+
+    it("should find tag by device id") {
+      insertTags()
+      db.findTagByDeviceId(2, 300).map(_.photoId) should be (List(1, 3))
+      db.findTagByDeviceId(1, 500).map(_.photoId) should be (List(1, 3))
+      db.findTagByDeviceId(3, 10).map(_.photoId) should be (List())
+      db.findTagByDeviceId(3, 500, 1, 2).map(_.photoId) should be (List(3, 4))
+    }
+
+    it("should find tag by photo id") {
+      insertTags()
+      db.findTagByPhotoId(3, 499).map(_.deviceId) should be (List(3, 2))
+      db.findTagByPhotoId(3, 500).map(_.deviceId) should be (List(3, 1, 2))
+      db.findTagByPhotoId(1, 10).map(_.deviceId) should be (List())
+    }
+
+    it("should find tag by address") {
+      insertTags()
+      insertDevices()
+      db.findTagByAddress("hoge").map(_.photoId) should be (List(1))
+      db.findTagByAddress("hoge", 500).map(_.photoId) should be (List(1, 3))
+      db.findTagByAddress("hoge", 500, 1, 1).map(_.photoId) should be (List(3))
+    }
+
+    it("should count tag with diff sec") {
+      insertTags()
+      insertDevices()
+      db.countTagByDeviceId(1, 499) should be (1)
+      db.countTagByDeviceId(1, 500) should be (2)
+      db.countTagByPhotoId(3) should be (1)
+      db.countTagByPhotoId(3, 300) should be (2)
+      db.countTagByPhotoId(3, 500) should be (3)
+    }
+
+    it("should find tag by date time") {
+      insertTags()
+      insertDevices()
+      insertPhotos()
+      db.findTagByPhotoDateTime("2011-11-25 00:00:00", "2011-11-27 00:00:00").size should be (5)
+      db.findTagByPhotoDateTime("2011-11-25 00:00:00", "2011-11-27 00:00:00", 300).size should be (6)
+
+      db.findTagByPhotoDateTime("2011-11-25 00:00:01", "2011-11-27 00:00:00").size should be (3)
+      db.findTagByPhotoDateTime("2011-11-25 00:00:01", "2011-11-27 00:00:00", 300).size should be (4)
+      db.findTagByPhotoDateTime("2011-11-25 00:00:01", "2011-11-27 00:00:00", 500).size should be (5)
+    }
   }
 }

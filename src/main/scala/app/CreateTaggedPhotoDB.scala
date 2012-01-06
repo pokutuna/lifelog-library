@@ -46,7 +46,7 @@ object CreateTaggedPhotoDB {
     }
 
     def createTags(photo: SimplePhoto, deviceIds: Seq[Int]): Seq[Tag] = {
-      deviceIds.map(new Tag(_, photo.id.get))
+      deviceIds.map(new Tag(_, photo.id.get, Tag.defaultDiffSec)) //TODO
     }
 
     def insertTagsAndDevices(sensing: SensingDB) = {
