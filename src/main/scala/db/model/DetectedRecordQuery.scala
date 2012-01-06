@@ -75,7 +75,7 @@ trait DetectedRecordQuery[T <: DetectedRecord] {
   def countAddress(address: String)(implicit connection: Connection): Int = {
     SQL(
       "select count(*) from " + tableName + " where address = {address}"
-    ).on('address -> address).as(scalar[Int].single) // can't use scalar[Int]
+    ).on('address -> address).as(scalar[Int].single)
   }
 
   def latestDateTime(implicit connection: Connection): String = {
