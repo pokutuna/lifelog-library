@@ -248,4 +248,41 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
     }
   }
 
+  def getInfo(key: String): Option[String] = {
+    withConnection { implicit connection =>
+      SQL(
+        "select value from db_info where key = {key}"
+      ).on('key -> key).as(scalar[String].singleOpt)
+    }
+  }
+
+  def setInfo(key: String, value: String) = {
+    getInfo(key) match {
+      case Some(_) => updateInfo(key, value)
+      case None    => insertInfo(key, value)
+    }
+  }
+
+  def deleteInfo(key: String) = {
+    withConnection { implicit connection =>
+      SQL("delete from db_info where key = {key}").on('key -> key).executeUpdate()
+    }
+  }
+
+  private def insertInfo(key: String, value: String) = {
+    withConnection { implicit connection =>
+      SQL(
+        "insert into db_info(key, value) values({key}, {value})"
+      ).on('key -> key, 'value -> value).executeUpdate()
+    }
+  }
+
+  private def updateInfo(key: String, value: String) = {
+    withConnection { implicit connection =>
+      SQL(
+        "update db_info set value = {value} where key = {key}"
+      ).on('value -> value, 'key -> key).executeUpdate()
+    }
+  }
+
 }

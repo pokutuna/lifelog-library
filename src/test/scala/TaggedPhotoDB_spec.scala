@@ -257,4 +257,33 @@ class TaggedPhotoDBSpec extends SpecHelper {
     }
   }
 
+  describe("DBInfo") {
+    it("should insert info") {
+      db.setInfo("key", "value")
+      db.getInfo("key") should be (Some("value"))
+    }
+
+    it("should get info") {
+      db.setInfo("a", "1")
+      db.setInfo("b", "2")
+      db.getInfo("a") should be (Some("1"))
+      db.getInfo("b") should be (Some("2"))
+      db.getInfo("hoge") should be (None)
+    }
+
+    it("should update info") {
+      db.setInfo("a", "1")
+      db.getInfo("a") should be (Some("1"))
+      db.setInfo("a", "unadon")
+      db.getInfo("a") should be (Some("unadon"))
+    }
+
+    it("should delete info") {
+      db.setInfo("a", "1")
+      db.getInfo("a") should be (Some("1"))
+      db.deleteInfo("a")
+      db.getInfo("a") should be (None)
+    }
+
+  }
 }
