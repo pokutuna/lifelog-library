@@ -231,4 +231,30 @@ class TaggedPhotoDBSpec extends SpecHelper {
     }
   }
 
+  describe("Favorite") {
+
+    it("should insert Favorite") {
+      db.insertFavorite("hoge", List(10,20,30)) should be (1)
+      val fav = db.findFavorite(1).get
+      fav.group should be (FavoriteGroup(Id(1), "hoge"))
+      fav.devices.map(_.id.get).toList should be (List(1,2,3))
+      fav.devices.map(_.groupId).toList should be (List(1,1,1))
+      fav.devices.map(_.deviceId).toList should be (List(10,20,30))
+    }
+
+    it("should delete Favorite") {
+      val id = db.insertFavorite("hoge", List(10,20,30))
+      db.deleteFavorite(id)
+      db.findFavorite(id) should be (None)
+    }
+
+    it("should find all Favorites") {
+      db.insertFavorite("hoge", List(10,20,30))
+      db.insertFavorite("fuga", List(10,40,50))
+      val favs = db.allFavorites
+      favs.map(_.group.label) should be (List("hoge", "fuga"))
+      favs.map(_.devices.map(_.deviceId)) should be (List(List(10,20,30), List(10, 40, 50)))
+    }
+  }
+
 }

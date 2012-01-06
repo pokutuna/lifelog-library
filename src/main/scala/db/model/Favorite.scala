@@ -47,7 +47,7 @@ object Favorite {
 
   def findFavoriteDeviceByGroupId(groupId: Int)(implicit connection: Connection): Seq[FavoriteDevice] = {
     SQL(
-      "select * from " + deviceTableName + " where groupId = {groupId} order by id"
+      "select * from " + deviceTableName + " where group_id = {groupId} order by id"
     ).on('groupId -> groupId).as(deviceSimple *)
   }
 
@@ -62,9 +62,10 @@ object Favorite {
     }
   }
 
-  def insertFavorite(label: String, deviceIds: Seq[Int])(implicit connection: Connection) = {
+  def insertFavorite(label: String, deviceIds: Seq[Int])(implicit connection: Connection): Int = {
     val groupId = insertFavoriteGroup(label)
     deviceIds.foreach(insertFavoriteDevice(groupId, _))
+    return groupId
   }
 
   def deleteFavorite(groupId: Int)(implicit connection: Connection) = {
@@ -92,7 +93,7 @@ object Favorite {
 
   def deleteFavoriteDeviceByGroupId(groupId: Int)(implicit connection: Connection) = {
     SQL(
-      "delte from " + deviceTableName + " where group_id = {groupId}"
+      "delete from " + deviceTableName + " where group_id = {groupId}"
     ).on('groupId -> groupId).executeUpdate()
   }
 }

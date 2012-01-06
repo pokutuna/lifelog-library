@@ -224,7 +224,7 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
     }
   }
 
-  def insertFavorite(label: String, deviceIds: Seq[Int]) = {
+  def insertFavorite(label: String, deviceIds: Seq[Int]): Int = {
     withConnection { implicit connection =>
       Favorite.insertFavorite(label, deviceIds)
     }
@@ -239,6 +239,12 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
   def allFavorites: Seq[Favorite] = {
     withConnection { implicit connection =>
       Favorite.allFavorites
+    }
+  }
+
+  def findFavorite(groupId: Int): Option[Favorite] = {
+    withConnection { implicit connection =>
+      Favorite.findFavorite(groupId)
     }
   }
 
