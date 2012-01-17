@@ -28,4 +28,11 @@ object WifiDetected extends DetectedRecordQuery[WifiDetected]{
     return wifiDetected
   }
 
+  override def searchDatePrefixUniqueDevice(datePrefix: String)(implicit connection: Connection): Seq[WifiDevice] = {
+    val relTableName = WifiDevice.tableName
+    SQL(
+      "select distinct(" + relTableName + ".address)," + relTableName + ".name from " + tableName + " inner join " + relTableName + " on " + tableName + ".address = " + relTableName + ".address where date_time glob {dateTime} order by date_time"
+    ).on('dateTime -> (datePrefix + "*")).as(WifiDevice.simple *)
+  }
+
 }

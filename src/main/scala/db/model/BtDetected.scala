@@ -26,4 +26,11 @@ object BtDetected extends DetectedRecordQuery[BtDetected] {
     return btDetected
   }
 
+  override def searchDatePrefixUniqueDevice(datePrefix: String)(implicit connection: Connection): Seq[BtDevice] = {
+    val relTableName = BtDevice.tableName
+    SQL(
+      "select distinct(" + relTableName + ".address)," + relTableName + ".name from " + tableName + " inner join " + relTableName + " on " + tableName + ".address = " + relTableName + ".address where date_time glob {dateTime} order by date_time"
+    ).on('dateTime -> (datePrefix + "*")).as(BtDevice.simple *)
+  }
+
 }

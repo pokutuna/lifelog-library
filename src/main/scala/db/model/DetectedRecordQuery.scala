@@ -2,6 +2,7 @@ package com.pokutuna.lifelog.db.model
 
 import anorm._
 import anorm.SqlParser._
+import com.pokutuna.lifelog.db.model._
 import java.sql._
 
 trait DetectedRecordQuery[T <: DetectedRecord] {
@@ -105,5 +106,7 @@ trait DetectedRecordQuery[T <: DetectedRecord] {
       case None    => insert(detected); true
     }
   }
+
+  def searchDatePrefixUniqueDevice(datePrefix: String)(implicit connection: Connection): Seq[_ <: DeviceRecord]
 
 }

@@ -188,4 +188,17 @@ class SensingDBSpec extends SpecHelper {
       db.findRegisteredFile(new RegisteredFile("a", "b")).map(_.fileId) should be (None)
     }
   }
+
+  describe("Search Detected Uniquely") {
+    it("should search bt devices") {
+      db.btSearchDatePrefixUniqueDevice("2011-07-07").toList should be (List(devA))
+      db.btSearchDatePrefixUniqueDevice("2000").toList should be (List(devA))
+    }
+
+    it("should search wifi devices") {
+      db.wifiSearchDatePrefixUniqueDevice("2011-07-07").toList should be (List(devB, devD))
+      db.wifiSearchDatePrefixUniqueDevice("hogehoge").toList should be (Nil)
+      db.wifiSearchDatePrefixUniqueDevice("").toList should be (List(devB, devD))
+    }
+  }
 }
