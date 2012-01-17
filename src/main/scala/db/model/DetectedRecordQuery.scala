@@ -111,7 +111,13 @@ trait DetectedRecordQuery[T <: DetectedRecord] {
 
   def findNearestDetection(dateTime: String, address: String)(implicit connection: Connection): Option[T] = {
     SQL(
-      "select * from " + tableName + " where address = {address} order by abs(strftime('%s', {dateTime}) - strftime('%s', date_time)) asc limit 1"
+      "select * from " + tableName + " where address = {address} order by abs(strftime('%s', date_time) - strftime('%s', {dateTime})) asc limit 1"
     ).on('address -> address, 'dateTime -> dateTime).as(simple.singleOpt)
+  }
+
+  def calcNearestDetectionDiffSec(dateTime: String, address: String)(implicit connection: Connection): Option[Int] = {
+    SQL(
+      "select (strftime('%s', date_time) - strftime('%s', {dateTime})) from " + tableName + " where address = {address} order by abs(strftime('%s', date_time) - strftime('%s', {dateTime})) asc limit 1"
+    ).on('address -> address, 'dateTime -> dateTime).as(scalar[Int].singleOpt)
   }
 }

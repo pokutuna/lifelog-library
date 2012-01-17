@@ -87,6 +87,18 @@ class SensingDB(path: String) extends Database(path) with Schema {
     }
   }
 
+  def btCalcNearestDetectionDiffSec(dateTime: String, address: String): Option[Int] = {
+    withConnection { implicit connection =>
+      BtDetected.calcNearestDetectionDiffSec(dateTime, address)
+    }
+  }
+
+  def wifiCalcNearestDetectionDiffSec(dateTime: String, address: String): Option[Int] = {
+    withConnection { implicit connection =>
+      WifiDetected.calcNearestDetectionDiffSec(dateTime, address)
+    }
+  }
+
   def wifiSearchDatePrefix(datePrefix: String): Seq[WifiDetected] = {
     withConnection { implicit connection =>
       WifiDetected.searchDatePrefix(datePrefix)

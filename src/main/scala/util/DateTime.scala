@@ -26,9 +26,14 @@ case class DateTime private(dateTime: String) {
     val array = TimeUtil.splitToArray(this.toDate)
     return DateTime(array(0), array(1), array(2), 0, 0, 0)
   }
+
   def roundDayEnd: DateTime = {
     val array = TimeUtil.splitToArray(this.toDate)
     return DateTime(array(0), array(1), array(2), 23, 59, 59)
+  }
+
+  def diffSeconds(date: DateTime): Int = {
+    DateTime.diffSeconds(this, date)
   }
 
   private def splitAtSpace(date: String): (String, String) = {
@@ -50,6 +55,10 @@ object DateTime {
     val c = Calendar.getInstance
     c.set(year, month - 1, day, hour, minute, second)
     apply(c.getTime())
+  }
+
+  def diffSeconds(standard: DateTime, other: DateTime): Int = {
+    ((other.toDate.getTime - standard.toDate.getTime) / 1000).toInt
   }
 
   object Implicit {

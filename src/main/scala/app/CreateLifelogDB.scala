@@ -3,7 +3,6 @@ package com.pokutuna.lifelog.app
 import com.pokutuna.lifelog.db._
 import com.pokutuna.lifelog.db.model._
 import com.pokutuna.lifelog.db.factory._
-import com.pokutuna.lifelog.db.util._
 import com.pokutuna.lifelog.db.dao._
 import com.pokutuna.lifelog.util._
 import scala.concurrent.ops._

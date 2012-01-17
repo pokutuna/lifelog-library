@@ -61,4 +61,20 @@ class DateTimeSpec extends SpecHelper {
       echoString(DateTime.format("2011-2-3 4:5:6")) should be ("2011-02-03 04:05:06")
     }
   }
+
+  describe("Diff Second") {
+    val d1 = DateTime.format("2011-01-17 00:00:00")
+    val d2 = DateTime.format("2011-01-17 00:00:30")
+    val d3 = DateTime.format("2011-01-16 23:59:30")
+
+    it("should calc diff") {
+      DateTime.diffSeconds(d1, d2) should be (30)
+      DateTime.diffSeconds(d1, d3) should be (-30)
+    }
+
+    it("should calc diff from a DateTime instance") {
+      d1.diffSeconds(d2) should be (30)
+      d1.diffSeconds(d3) should be (-30)
+    }
+  }
 }

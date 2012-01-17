@@ -214,5 +214,10 @@ class SensingDBSpec extends SpecHelper {
       db.wifiNearestDetection("2011-07-07 00:10:00", "AddrB") should be (Some(recB2))
       db.wifiNearestDetection("2011-07-07 00:00:29", "AddrB") should be (Some(recB1))
     }
+
+    it("should calc nearest detection diff sec") {
+      db.wifiCalcNearestDetectionDiffSec("2011-07-07 00:00:00", "AddrB") should be (Some(0))
+      db.wifiCalcNearestDetectionDiffSec("2011-07-07 00:00:10", "AddrB") should be (Some(-10))
+    }
   }
 }
