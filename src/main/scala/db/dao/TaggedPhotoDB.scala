@@ -63,6 +63,12 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
     }
   }
 
+  def findTagByPhotoId(photoIds: Seq[Int], diffSec: Int): Seq[Tag] = {
+    withConnection { implicit connection =>
+      photoIds.flatMap(Tag.findByPhotoId(_, diffSec))
+    }
+  }
+
   def findTagByAddress(address: String): Seq[Tag] = {
     findTagByAddress(address, Tag.defaultDiffSec)
   }
@@ -98,6 +104,18 @@ class TaggedPhotoDB(path: String) extends Database(path) with Schema {
   def countTagByPhotoId(photoId: Int, diffSec: Int = Tag.defaultDiffSec): Int = {
     withConnection { implicit connection =>
       Tag.countByPhotoId(photoId, diffSec)
+    }
+  }
+
+  def countTagBtByPhotoId(photoId: Int, diffSec: Int = Tag.defaultDiffSec): Int = {
+    withConnection { implicit connection =>
+      Tag.countBtByPhotoId(photoId, diffSec)
+    }
+  }
+
+  def countTagWifiByPhotoId(photoId: Int, diffSec: Int = Tag.defaultDiffSec): Int = {
+    withConnection { implicit connection =>
+      Tag.countWifiByPhotoId(photoId, diffSec)
     }
   }
 

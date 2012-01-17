@@ -12,6 +12,14 @@ case class Tag(id: Pk[Int], deviceId: Int, photoId: Int, diffSec: Int) {
   def this(deviceId: Int, photoId: Int) = {
     this(deviceId, photoId, Tag.defaultDiffSec)
   }
+
+  def device(implicit connection: Connection): Device = {
+    Device.findById(deviceId).get
+  }
+
+  def photo(implicit connection: Connection): SimplePhoto = {
+    SimplePhoto.findById(photoId).get
+  }
 }
 
 object Tag {
@@ -99,6 +107,20 @@ object Tag {
     ).on(
       'minDiff -> -diffSec, 'maxDiff -> diffSec, 'photoId -> photoId
     ).as(scalar[Int].single)
+  }
+
+  private def countByPhotoIdAndDeviceType(photoId: Int, diffSec:Int, deviceType: String)(implicit connection: Connection): Int = {
+    SQL(
+      "select count(*) from " + tableName + " left join " + Device.tableName + " on " + tableName + ".device_id = " + Device.tableName + ".id where {minDiff} <= diff_sec and diff_sec <= {maxDiff} and photo_id = {photoId} and device_type = {deviceType}"
+    ).on('minDiff -> -diffSec, 'maxDiff -> diffSec, 'photoId -> photoId, 'deviceType -> deviceType).as(scalar[Int].single)
+  }
+
+  def countBtByPhotoId(photoId: Int, diffSec: Int)(implicit connection: Connection): Int = {
+    countByPhotoIdAndDeviceType(photoId, diffSec, "bt")
+  }
+
+  def countWifiByPhotoId(photoId: Int, diffSec: Int)(implicit connection: Connection): Int = {
+    countByPhotoIdAndDeviceType(photoId, diffSec, "wf")
   }
 
 }
