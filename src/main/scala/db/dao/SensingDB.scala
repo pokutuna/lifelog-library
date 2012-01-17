@@ -18,6 +18,13 @@ class SensingDB(path: String) extends Database(path) with Schema {
      wifiDetectedIn(start, end, offset, limit)).sortBy(_.dateTime)
   }
 
+  def nearestDetection(dateTime: String, address: String): Option[DetectedRecord] = {
+    btNearestDetection(dateTime, address) match {
+      case None    => wifiNearestDetection(dateTime, address)
+      case Some(d) => Some(d)
+    }
+  }
+
   def btDetectedIn(start: String, end: String): Seq[BtDetected] = {
     withConnection { implicit connection =>
       BtDetected.findByDateTime(start, end)
@@ -74,6 +81,12 @@ class SensingDB(path: String) extends Database(path) with Schema {
     }
   }
 
+  def btNearestDetection(dateTime: String, address: String): Option[BtDetected] = {
+    withConnection { implicit connection =>
+      BtDetected.findNearestDetection(dateTime, address)
+    }
+  }
+
   def wifiSearchDatePrefix(datePrefix: String): Seq[WifiDetected] = {
     withConnection { implicit connection =>
       WifiDetected.searchDatePrefix(datePrefix)
@@ -95,6 +108,12 @@ class SensingDB(path: String) extends Database(path) with Schema {
   def wifiSearchDatePrefixUniqueDevice(datePrefix: String): Seq[WifiDevice] = {
     withConnection { implicit connection =>
       WifiDetected.searchDatePrefixUniqueDevice(datePrefix)
+    }
+  }
+
+  def wifiNearestDetection(dateTime: String, address: String): Option[WifiDetected] = {
+    withConnection { implicit connection =>
+      WifiDetected.findNearestDetection(dateTime, address)
     }
   }
 

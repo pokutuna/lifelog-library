@@ -201,4 +201,18 @@ class SensingDBSpec extends SpecHelper {
       db.wifiSearchDatePrefixUniqueDevice("").toList should be (List(devB, devD))
     }
   }
+
+  describe("Find nearest detection") {
+    it("should find nearest bt detection") {
+      db.btNearestDetection("2011-07-07 00:00:00", "AddrA") should be (Some(recA1))
+      db.btNearestDetection("2011-07-08 00:00:00", "AddrA") should be (Some(recA2))
+      db.btNearestDetection("2011-07-08 00:00:00", "Hoge") should be (None)
+    }
+
+    it("should find nearest wifi detection") {
+      db.wifiNearestDetection("2011-07-07 00:00:00", "AddrB") should be (Some(recB1))
+      db.wifiNearestDetection("2011-07-07 00:10:00", "AddrB") should be (Some(recB2))
+      db.wifiNearestDetection("2011-07-07 00:00:29", "AddrB") should be (Some(recB1))
+    }
+  }
 }

@@ -109,4 +109,9 @@ trait DetectedRecordQuery[T <: DetectedRecord] {
 
   def searchDatePrefixUniqueDevice(datePrefix: String)(implicit connection: Connection): Seq[_ <: DeviceRecord]
 
+  def findNearestDetection(dateTime: String, address: String)(implicit connection: Connection): Option[T] = {
+    SQL(
+      "select * from " + tableName + " where address = {address} order by abs(strftime('%s', {dateTime}) - strftime('%s', date_time)) asc limit 1"
+    ).on('address -> address, 'dateTime -> dateTime).as(simple.singleOpt)
+  }
 }
