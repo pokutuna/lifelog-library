@@ -1,7 +1,7 @@
 package com.pokutuna.lifelog.sample;
 
 import com.pokutuna.lifelog.db.model.*;
-import com.pokutuna.lifelog.db.util.*;
+import com.pokutuna.lifelog.db.factory.*;
 import com.pokutuna.lifelog.db.model.*;
 import com.pokutuna.lifelog.util.*;
 import java.io.File;
