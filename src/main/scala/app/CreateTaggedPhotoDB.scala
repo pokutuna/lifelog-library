@@ -119,7 +119,8 @@ object CreateTaggedPhotoDB {
     }
 
     def createPresetLevelTags(photo: SimplePhoto): Seq[Tag] = {
-      val presets = List(3 * 60, 15 * 60, 30 * 60, 60 * 60, 3 * 60 * 60, 6 * 60 * 60)
+      // range 3min, 15min, 30min, 1h, 3h, 6h
+      val presets = List(3 * 60)//, 15 * 60, 30 * 60, 60 * 60, 3 * 60 * 60, 6 * 60 * 60)
       val tags = presets.flatMap{ pre =>
         val devices = getDevicesByRange(photo, pre)
         val deviceIds = db.insertDevice(devices)
@@ -129,8 +130,8 @@ object CreateTaggedPhotoDB {
     }
 
     def generateFromPhoto(photo: SimplePhoto) {
-      val tags = createNoLevelTags(photo)
-      //val tags = createPresetLevelTags(photo)
+      //val tags = createNoLevelTags(photo)
+      val tags = createPresetLevelTags(photo)
       db.insertTag(tags)
     }
 
