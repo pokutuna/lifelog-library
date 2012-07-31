@@ -13,7 +13,7 @@ scalaVersion := "2.9.2"
 resolvers += "typesace" at "http://repo.typesafe.com/typesafe/releases"
 
 libraryDependencies ++= Seq(
-  "org.scalatest" % "scalatest_2.9.0" % "1.6.1",
+  "org.scalatest" %% "scalatest" % "1.8" % "test",
   "play" %% "anorm" % "2.1-0627-sbt12",
   "org.xerial" % "sqlite-jdbc" % "3.7.2"
 )
