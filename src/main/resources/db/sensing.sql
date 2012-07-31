@@ -43,6 +43,8 @@ CREATE TABLE registered_files (
   file_name text,
   md5_hex text
 );
+DROP INDEX IF EXISTS files_md5;
+CREATE INDEX files_md5 on registered_files(md5_hex);
 
 -- * original table *
 -- CREATE TABLE registered_files (

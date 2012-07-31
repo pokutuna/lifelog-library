@@ -11,10 +11,8 @@ object WifiDetected extends DetectedRecordQuery[WifiDetected]{
   val tableName = "wifi_detected"
 
   val simple = {
-    get[String](tableName + ".address") ~/
-    get[String](tableName + ".date_time") ~/
-    get[Int](tableName + ".strength") ~/
-    get[Int](tableName + ".file_id") ^^ {
+    get[String](tableName + ".address") ~ get[String](tableName + ".date_time") ~
+    get[Int](tableName + ".strength") ~ get[Int](tableName + ".file_id") map {
       case address~dateTime~strength~fileId =>
         WifiDetected(address, dateTime, strength, fileId)
     }
@@ -28,6 +26,13 @@ object WifiDetected extends DetectedRecordQuery[WifiDetected]{
       'strength -> wifiDetected.strength, 'fileId -> wifiDetected.fileId
     ).executeUpdate()
     return wifiDetected
+  }
+
+  override def searchDatePrefixUniqueDevice(datePrefix: String)(implicit connection: Connection): Seq[WifiDevice] = {
+    val relTableName = WifiDevice.tableName
+    SQL(
+      "select distinct(" + relTableName + ".address)," + relTableName + ".name from " + tableName + " inner join " + relTableName + " on " + tableName + ".address = " + relTableName + ".address where date_time glob {dateTime} order by date_time"
+    ).on('dateTime -> (datePrefix + "*")).as(WifiDevice.simple *)
   }
 
 }

@@ -35,4 +35,11 @@ class TimeUtilSpec extends SpecHelper {
       TimeUtil.parseAndFormat("2010-1-7 1:03:10") should be ("2010-01-07 01:03:10")
     }
   }
+
+  describe("Split") {
+    it("should split to array") {
+      val d = TimeUtil.parse("2012-01-03 15:54:30")
+      TimeUtil.splitToArray(d) should be (Array(2012, 1, 3, 15, 54, 30))
+    }
+  }
 }

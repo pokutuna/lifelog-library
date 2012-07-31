@@ -11,8 +11,7 @@ object BtDevice extends DeviceRecordQuery[BtDevice]{
   val tableName = "bt_devices"
 
   val simple = {
-    get[String](tableName + ".address") ~/
-    get[String](tableName + ".name") ^^ {
+    get[String](tableName + ".address") ~ get[String](tableName + ".name") map {
       case address~name => BtDevice(address, name)
     }
   }

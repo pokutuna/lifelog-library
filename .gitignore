@@ -1,6 +1,10 @@
 target/
+package/
 lib_managed/
 src_managed/
 project/boot/
 .DS_Store
 test_*.db
+.ensime
+.ensime_lucene
+

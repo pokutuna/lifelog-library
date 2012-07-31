@@ -40,6 +40,12 @@ class DateTimeSpec extends SpecHelper {
     it("should throw ParseException when applying invalid String") {
       evaluating { DateTime.format("") } should produce [java.text.ParseException]
     }
+
+    it("should get rounded day") {
+      val a = DateTime.format("2012-01-03 16:02:30")
+      a.roundDayStart should be (DateTime(2012, 1, 3, 0, 0, 0))
+      a.roundDayEnd should be (DateTime(2012, 1, 3, 23, 59, 59))
+    }
   }
 
   describe("Implicits") {
@@ -53,6 +59,22 @@ class DateTimeSpec extends SpecHelper {
     it("should convert to String from DateTime") {
       def echoString(str: String): String = str
       echoString(DateTime.format("2011-2-3 4:5:6")) should be ("2011-02-03 04:05:06")
+    }
+  }
+
+  describe("Diff Second") {
+    val d1 = DateTime.format("2011-01-17 00:00:00")
+    val d2 = DateTime.format("2011-01-17 00:00:30")
+    val d3 = DateTime.format("2011-01-16 23:59:30")
+
+    it("should calc diff") {
+      DateTime.diffSeconds(d1, d2) should be (30)
+      DateTime.diffSeconds(d1, d3) should be (-30)
+    }
+
+    it("should calc diff from a DateTime instance") {
+      d1.diffSeconds(d2) should be (30)
+      d1.diffSeconds(d3) should be (-30)
     }
   }
 }

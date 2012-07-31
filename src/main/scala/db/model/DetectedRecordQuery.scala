@@ -2,12 +2,13 @@ package com.pokutuna.lifelog.db.model
 
 import anorm._
 import anorm.SqlParser._
+import com.pokutuna.lifelog.db.model._
 import java.sql._
 
 trait DetectedRecordQuery[T <: DetectedRecord] {
 
   val tableName: String
-  val simple: Parser[T]
+  val simple: RowParser[T]
 
   def insert(detected: T)(implicit connection: Connection): T
 
@@ -17,7 +18,7 @@ trait DetectedRecordQuery[T <: DetectedRecord] {
     ).on(
       'address -> detected.address, 'dateTime -> detected.dateTime,
       'fileId -> detected.fileId
-    ).as(simple ?)
+    ).as(simple.singleOpt)
   }
 
   def findByFileId(fileId: Int)(implicit connection: Connection): Seq[T] = {
@@ -75,19 +76,19 @@ trait DetectedRecordQuery[T <: DetectedRecord] {
   def countAddress(address: String)(implicit connection: Connection): Int = {
     SQL(
       "select count(*) from " + tableName + " where address = {address}"
-    ).on('address -> address).as(get[Int]("count(*)")) // can't use scalar[Int]
+    ).on('address -> address).as(scalar[Int].single)
   }
 
   def latestDateTime(implicit connection: Connection): String = {
     SQL(
       "select date_time from " + tableName + " order by date_time desc limit 1"
-    ).as(get[String]("date_time"))
+    ).as(scalar[String].single)
   }
 
   def oldestDateTime(implicit connection: Connection): String = {
     SQL(
       "select date_time from " + tableName + " order by date_time asc limit 1"
-    ).as(get[String]("date_time"))
+    ).as(scalar[String].single)
   }
 
   def detele(detected: T)(implicit connection: Connection) = {
@@ -106,4 +107,17 @@ trait DetectedRecordQuery[T <: DetectedRecord] {
     }
   }
 
+  def searchDatePrefixUniqueDevice(datePrefix: String)(implicit connection: Connection): Seq[_ <: DeviceRecord]
+
+  def findNearestDetection(dateTime: String, address: String)(implicit connection: Connection): Option[T] = {
+    SQL(
+      "select * from " + tableName + " where address = {address} order by abs(strftime('%s', date_time) - strftime('%s', {dateTime})) asc limit 1"
+    ).on('address -> address, 'dateTime -> dateTime).as(simple.singleOpt)
+  }
+
+  def calcNearestDetectionDiffSec(dateTime: String, address: String)(implicit connection: Connection): Option[Int] = {
+    SQL(
+      "select (strftime('%s', date_time) - strftime('%s', {dateTime})) from " + tableName + " where address = {address} order by abs(strftime('%s', date_time) - strftime('%s', {dateTime})) asc limit 1"
+    ).on('address -> address, 'dateTime -> dateTime).as(scalar[Int].singleOpt)
+  }
 }

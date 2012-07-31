@@ -36,28 +36,28 @@ object PhotoRecord {
   val tableName = "photo_table"
 
   def simple = {
-    get[Pk[Int]]("id") ~/
-    get[String]("directory") ~/
-    get[String]("filename") ~/
-    get[String]("org_date") ~/
-    get[Double]("latitude") ~/
-    get[Double]("longitude") ~/
-    get[Int]("width") ~/
-    get[Int]("height") ~/
-    get[Int]("file_size") ~/
-    get[Int]("year") ~/
-    get[Int]("month") ~/
-    get[Int]("day") ~/
-    get[Int]("hour") ~/
-    get[Int]("minute") ~/
-    get[Int]("second") ~/
-    get[String]("comment") ^^ {
+    get[Pk[Int]]("id") ~
+    get[String]("directory") ~
+    get[String]("filename") ~
+    get[String]("org_date") ~
+    get[Double]("latitude") ~
+    get[Double]("longitude") ~
+    get[Int]("width") ~
+    get[Int]("height") ~
+    get[Int]("file_size") ~
+    get[Int]("year") ~
+    get[Int]("month") ~
+    get[Int]("day") ~
+    get[Int]("hour") ~
+    get[Int]("minute") ~
+    get[Int]("second") ~
+    get[String]("comment") map {
       case id~directory~fielname~orgDate~latitude~longitude~width~height~fileSize~year~month~day~hour~minute~second~comment =>
         PhotoRecord(id, directory, fielname, orgDate, latitude, longitude, width, height, fileSize, year, month, day, hour, minute, second, comment)
     }
   }
 
-  def insert(photo: PhotoRecord)(implicit connection: Connection): PhotoRecord = {
+  def insert(photo: PhotoRecord)(implicit connection: Connection): Int = {
     SQL(
       "insert into " + tableName + "(directory, filename, org_date, latitude, longitude, width, height, file_size, year, month, day, hour, minute, second, comment) values ({directory}, {filename}, {orgDate}, {latitude}, {longitude}, {width}, {height}, {fileSize}, {year}, {month}, {day}, {hour}, {minute}, {second}, {comment})"
     ).on(
@@ -67,13 +67,13 @@ object PhotoRecord {
       'month -> photo.month, 'day -> photo.day, 'hour -> photo.hour, 'minute -> photo.minute,
       'second -> photo.second, 'comment -> photo.comment
     ).executeUpdate()
-    return photo
+    SQL("select last_insert_rowid();").as(scalar[Int].single)
   }
 
   def findById(id: Int)(implicit connection: Connection): Option[PhotoRecord] = {
     SQL(
       "select * from " + tableName + " where id = {id} limit 1"
-    ).on('id -> id).as(simple ? )
+    ).on('id -> id).as(simple.singleOpt)
   }
 
   def findByName(filename: String)(implicit connection: Connection): Seq[PhotoRecord] = {

@@ -59,17 +59,15 @@ class LifelogDB(path: String) extends Database(path) with Schema {
     !photoByName(dirname, filename).isEmpty
   }
 
-  def insertPhoto(photo: PhotoRecord) = {
+  def insertPhoto(photo: PhotoRecord): Int = {
     withConnection { implicit connection =>
       PhotoRecord.insert(photo)
     }
   }
 
-  def insertPhoto(photos: Seq[PhotoRecord]) = {
+  def insertPhoto(photos: Seq[PhotoRecord]): Seq[Int] = {
     withTransaction { implicit connection =>
-      for (record <- photos) {
-        PhotoRecord.insert(record)
-      }
+      photos.map(PhotoRecord.insert(_))
     }
   }
 

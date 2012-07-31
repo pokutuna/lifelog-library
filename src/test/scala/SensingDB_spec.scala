@@ -188,4 +188,36 @@ class SensingDBSpec extends SpecHelper {
       db.findRegisteredFile(new RegisteredFile("a", "b")).map(_.fileId) should be (None)
     }
   }
+
+  describe("Search Detected Uniquely") {
+    it("should search bt devices") {
+      db.btSearchDatePrefixUniqueDevice("2011-07-07").toList should be (List(devA))
+      db.btSearchDatePrefixUniqueDevice("2000").toList should be (List(devA))
+    }
+
+    it("should search wifi devices") {
+      db.wifiSearchDatePrefixUniqueDevice("2011-07-07").toList should be (List(devB, devD))
+      db.wifiSearchDatePrefixUniqueDevice("hogehoge").toList should be (Nil)
+      db.wifiSearchDatePrefixUniqueDevice("").toList should be (List(devB, devD))
+    }
+  }
+
+  describe("Find nearest detection") {
+    it("should find nearest bt detection") {
+      db.btNearestDetection("2011-07-07 00:00:00", "AddrA") should be (Some(recA1))
+      db.btNearestDetection("2011-07-08 00:00:00", "AddrA") should be (Some(recA2))
+      db.btNearestDetection("2011-07-08 00:00:00", "Hoge") should be (None)
+    }
+
+    it("should find nearest wifi detection") {
+      db.wifiNearestDetection("2011-07-07 00:00:00", "AddrB") should be (Some(recB1))
+      db.wifiNearestDetection("2011-07-07 00:10:00", "AddrB") should be (Some(recB2))
+      db.wifiNearestDetection("2011-07-07 00:00:29", "AddrB") should be (Some(recB1))
+    }
+
+    it("should calc nearest detection diff sec") {
+      db.wifiCalcNearestDetectionDiffSec("2011-07-07 00:00:00", "AddrB") should be (Some(0))
+      db.wifiCalcNearestDetectionDiffSec("2011-07-07 00:00:10", "AddrB") should be (Some(-10))
+    }
+  }
 }

@@ -1,14 +1,21 @@
+import AssemblyKeys._
+
+assemblySettings
+
 name := "lifelog-library"
 
-version := "0.3.2"
+version := "0.3.3"
 
 organization := "com.pokutuna"
 
-scalaVersion := "2.9.1"
+scalaVersion := "2.9.2"
+
+resolvers += "typesace" at "http://repo.typesafe.com/typesafe/releases"
 
 libraryDependencies ++= Seq(
   "org.scalatest" % "scalatest_2.9.0" % "1.6.1",
-  "org.sqlite" % "sqlitejdbc" % "v056" from "http://files.zentus.com/sqlitejdbc/sqlitejdbc-v056.jar"
+  "org.sqlite" % "sqlitejdbc" % "v056" from "http://files.zentus.com/sqlitejdbc/sqlitejdbc-v056.jar",
+  "play" %% "anorm" % "2.1-0627-sbt12"
 )
 
 javacOptions ++= Seq("-encoding", "utf8")
@@ -21,6 +28,6 @@ watchSources ~= { (files: Seq[File]) =>
 
 fork in run := true
 
-// javaOptions in run += "-agentlib:hprof"
+// javaOptions in run += "-agentlib:hprof=cpu=samples"
 
 traceLevel := 20
