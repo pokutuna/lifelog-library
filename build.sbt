@@ -4,7 +4,7 @@ version := "0.3.3"
 
 organization := "com.pokutuna"
 
-scalaVersion := "2.9.1"
+scalaVersion := "2.9.2"
 
 resolvers += "typesace" at "http://repo.typesafe.com/typesafe/releases"
 
