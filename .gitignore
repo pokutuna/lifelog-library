@@ -6,3 +6,5 @@ project/boot/
 .DS_Store
 test_*.db
 .ensime
+.ensime_lucene
+
