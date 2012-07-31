@@ -2,9 +2,9 @@
 
 ## Environment
 
-sbt 0.7.7
+sbt 0.11.x
 
-scala 2.9.0-1
+scala 2.9.2
 
 
 ## Packages
@@ -45,16 +45,6 @@ scala 2.9.0-1
 
 [lifelog-library](https://github.com/pokutuna/lifelog-library/downloads/) から最新版のjar
 
-[scala-library-2.9.0-1](http://scala-tools.org/repo-releases/org/scala-lang/scala-library/2.9.0-1/scala-library-2.9.0-1.jar)
-
-[scalaquery-0.9.4](http://scala-tools.org/repo-releases/org/scalaquery/scalaquery_2.9.0/0.9.4/scalaquery_2.9.0-0.9.4.jar)
-
-[sqlitejdbc-v056](http://files.zentus.com/sqlitejdbc/sqlitejdbc-v056.jar)
-(たぶん他のでも動く)
-
-[metadata-extractor](http://code.google.com/p/metadata-extractor/downloads/detail?name=metadata-extractor-2.5.0-RC2.zip) を解凍して出てくるjar
-(Exif抽出に使ってる)
-
 
 * Javaから利用するサンプル - https://github.com/pokutuna/lifelog-library/tree/master/src/test/java/com/pokutuna/lifelog/sample
 
@@ -64,7 +54,15 @@ scala 2.9.0-1
 * metadata-extractor 
     * http://drewnoakes.com/code/exif/
 
-* anorm(2.0-beta)
+* anorm
     * https://github.com/playframework/Play20
 
+* sqlite-jdbc
+    * http://www.xerial.org/trac/Xerial/wiki/SQLiteJDBC
+
 These are provided under [Apache version 2.0 license](http://www.apache.org/licenses/LICENSE-2.0).
+
+
+# License
+
+This library follows the Apache License version 2.0 (http://www.apache.org/licenses/)
