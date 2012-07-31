@@ -1,3 +1,7 @@
+import AssemblyKeys._
+
+assemblySettings
+
 name := "lifelog-library"
 
 version := "0.3.3"
