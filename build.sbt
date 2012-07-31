@@ -4,7 +4,7 @@ assemblySettings
 
 name := "lifelog-library"
 
-version := "0.3.3"
+version := "0.4.0"
 
 organization := "com.pokutuna"
 
@@ -14,8 +14,8 @@ resolvers += "typesace" at "http://repo.typesafe.com/typesafe/releases"
 
 libraryDependencies ++= Seq(
   "org.scalatest" % "scalatest_2.9.0" % "1.6.1",
-  "org.sqlite" % "sqlitejdbc" % "v056" from "http://files.zentus.com/sqlitejdbc/sqlitejdbc-v056.jar",
-  "play" %% "anorm" % "2.1-0627-sbt12"
+  "play" %% "anorm" % "2.1-0627-sbt12",
+  "org.xerial" % "sqlite-jdbc" % "3.7.2"
 )
 
 javacOptions ++= Seq("-encoding", "utf8")
