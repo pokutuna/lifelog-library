@@ -45,6 +45,8 @@ scala 2.9.2
 
 [lifelog-library](https://github.com/pokutuna/lifelog-library/downloads/) から最新版のjar
 
+[scala-library.jar](http://repo.typesafe.com/typesafe/releases/org/scala-lang/scala-library/2.9.2/scala-library-2.9.2.jar) 2.9.2
+
 
 * Javaから利用するサンプル - https://github.com/pokutuna/lifelog-library/tree/master/src/test/java/com/pokutuna/lifelog/sample
 
