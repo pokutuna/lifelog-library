@@ -44,6 +44,18 @@ DROP INDEX IF EXISTS device_device_type_address;
 CREATE INDEX device_device_type_address on devices(device_type, address);
 
 
+DROP TABLE IF EXISTS photo_distances;
+CREATE TABLE photo_distances (
+  photo_id integer,
+  pair_id integer,
+  time_distance real,
+  geo_distance real,
+  tag_distance real
+);
+DROP INDEX IF EXISTS photo_distances_ids;
+CREATE INDEX photo_distances_ids on photo_distances(photo_id, pair_id);
+
+
 DROP TABLE IF EXISTS device_nomads;
 CREATE TABLE device_nomads (
   device_id integer PRIMARY KEY,
@@ -61,7 +73,6 @@ CREATE TABLE favorite_groups (
   id integer PRIMARY KEY AUTOINCREMENT,
   label text
 );
-
 
 DROP TABLE IF EXISTS favorite_devices;
 CREATE TABLE favorite_devices (
