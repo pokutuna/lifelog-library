@@ -46,6 +46,7 @@ CREATE INDEX device_device_type_address on devices(device_type, address);
 
 DROP TABLE IF EXISTS photo_distances;
 CREATE TABLE photo_distances (
+  id integer PRIMARY KEY AUTOINCREMENT,
   photo_id integer,
   pair_id integer,
   time_distance real,
