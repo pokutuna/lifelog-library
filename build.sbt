@@ -28,6 +28,8 @@ watchSources ~= { (files: Seq[File]) =>
 
 fork in run := true
 
+javaOptions in run += "-Xmx1024M"
+
 // javaOptions in run += "-agentlib:hprof=cpu=samples"
 
 traceLevel := 20
